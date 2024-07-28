@@ -15,6 +15,7 @@
   "ts-node": {
     "require": ["tsconfig-paths/register"]
   },
+  "files": ["src/type.d.ts"],
   // "files": ["src/type.d.ts"], // global type
   "include": ["src/**/*"] 
 }
