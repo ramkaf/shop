@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import { ForbiddenException, UnAuthorizedException } from './error.middleware';
-import { IPayload } from '~/features/user/interface/payload.interface';
+import { IPayload } from '~/features/user/interfaces/payload.interface';
 import { jwtService } from '~/services/db/jwt.service';
 const authMiddleware = async (req: Request, res: Response, next: NextFunction) => {
   const authHeader = req.headers['authorization'];

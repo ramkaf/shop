@@ -7,4 +7,8 @@ const usersRegisterSchema = Joi.object({
     lastName:Joi.string().required(),
     avatar : Joi.optional()
 })
-export default usersRegisterSchema
+const usersLoginSchema = Joi.object({
+    email : Joi.string().required().email(),
+    password : Joi.string().required(),
+})
+export {usersRegisterSchema , usersLoginSchema}

@@ -3,11 +3,11 @@ import { prisma } from "~/prisma";
 class UsersController {
     public async createUser(req:Request,res:Response,next:NextFunction){
             const {
-                firstName , lastName , email , password , avatar
+                firstName , lastName , email , password , avatar , username
             } =req.body
             const newUser = await prisma.user.create({
                 data: {
-                  firstName , lastName , password , avatar , email
+                  firstName , lastName , password , avatar , email,username
                 },
               });
               res.status(201).json({newUser})

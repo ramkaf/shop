@@ -1,10 +1,12 @@
-import { IPayload } from "./features/user/interface/payload.interface";
+import { IPayload } from "./features/user/interfaces/payload.interface";
 
 declare global {
     namespace Express {
       interface Request {
         validatedBody?: any;
-        currentUser? : IPayload // You can specify a more precise type if you know the structure
+        validatedParams?: any;
+        validatedQueries?: any;
+        currentUser? : IPayload;// You can specify a more precise type if you know the structure
       }
     }
 }

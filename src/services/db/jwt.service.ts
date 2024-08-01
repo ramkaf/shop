@@ -1,6 +1,6 @@
 import 'express-async-errors'
 import jwt from 'jsonwebtoken'
-import { IPayload } from '~/features/user/interface/payload.interface';
+import { IPayload } from '~/features/user/interfaces/payload.interface';
 class JwtService {
     public async generateAccessToken (payload:IPayload):Promise<string>{
         const accessToken: string = jwt.sign(payload, process.env.ACCESS_TOKEN!, { expiresIn: '1d' });

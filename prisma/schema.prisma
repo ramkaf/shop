@@ -7,26 +7,50 @@
 generator client {
   provider = "prisma-client-js"
 }
-
 datasource db {
   provider = "mysql"
   url      = env("DATABASE_URL")
 }
+enum Role {
+  USER
+  ADMIN
+}
 model User {
   id        Int      @id @default(autoincrement())
-  email     String   @db.VarChar(255)
+  email     String  @unique @db.VarChar(255)
   password     String   @db.VarChar(255)
   firstName  String
   lastName String
+  username String @unique
   avatar String
   role Role @default(USER)
   isActive Boolean @default(true)
-
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
 
-enum Role {
-  USER
-  ADMIN
+model Category {
+  id      Int       @id @default(autoincrement())
+  title    String
+  icon    String
+  status  Boolean   @default(true)
+  slug String @unique
+  uniqueString String @unique
+  products Product[]  // Define the one-to-many relationship
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+model Product {
+  id              Int      @id @default(autoincrement())
+  title            String
+  longDescription String @db.Text  
+  shortDescription String 
+  quantity        Int      @default(0)
+  mainImage       String
+  categoryId      Int   
+  slug String @unique 
+  uniqueString String @unique   // Foreign key field
+  category        Category @relation(fields: [categoryId], references: [id])  // Define the relation
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }

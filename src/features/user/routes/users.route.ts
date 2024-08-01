@@ -1,6 +1,7 @@
 
 import express from 'express'
-import { userController } from '../controller/users.controller'
+import 'express-async-errors'
+import { userController } from '../controllers/users.controller'
 import { authMiddleware , isLogged} from '~/globals/middlewares/auth.middleware'
 import 'express-async-errors'
 const userRoute = express.Router()

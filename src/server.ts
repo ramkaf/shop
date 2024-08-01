@@ -1,42 +1,46 @@
-import { Application } from 'express'
-import 'dotenv/config'
-import 'express-async-errors'
-import  express , {Request , Response , NextFunction}  from 'express';
+import { Application } from 'express';
+import 'dotenv/config';
+import 'express-async-errors';
+import express, { Request, Response, NextFunction } from 'express';
 import appRoutes from './globals/routes/appRoutes';
-import { CustomError, NotFoundException } from './globals/middlewares/error.middleware';
+import { CustomError, errorHandler, NotFoundException } from './globals/middlewares/error.middleware';
+import { responseToClient } from './globals/utils/helper';
+import { HTTP_STATUS } from './globals/constants/http';
+
 export class Server {
-  private app: Application
-  constructor(app: Application) {
-    this.app = app
-  }
-  public start ():void{
-    this.setupMiddlewares();
-    this.setupRoutes();
-    this.setupGlobalErrors();
-    this.startServer();
-  }
-  private setupMiddlewares():void{
-    this.app.use(express.json())
-  }
-  private setupRoutes():void{
-    appRoutes(this.app)
-  }
-  private setupGlobalErrors():void{
-    this.app.all('*',(req:Request,res:Response,next)=>{
-      return next(new NotFoundException(`the URl ${req.originalUrl} not found`))
-    })
+    private app: Application;
 
-    this.app.use((error:any,req:Request,res:Response,next:NextFunction)=>{
-      if (error instanceof CustomError)
-        return res.status(error.statusCode).json(error.getResponseError())
-      next()
-    })
-  }
+    constructor(app: Application) {
+        this.app = app;
+    }
+    public start(): void {
+        this.setupMiddlewares();
+        this.setupRoutes();
+        this.setupGlobalErrors();
+        this.startServer();
+    }
+    private setupMiddlewares(): void {
+        this.app.use(express.json());
+    }
+    private setupRoutes(): void {
+        appRoutes(this.app);
+    }
+    private setupGlobalErrors(): void {
+        this.app.all('*', (req: Request, res: Response, next: NextFunction) => {
+            return next(new NotFoundException(`The URL ${req.originalUrl} not found`));
+        });
 
-  public startServer (){
-    this.app.listen(parseInt(process.env.PORT!),()=>console.log(`listening on port ${process.env.PORT}`)
-    )
-  }
+        this.app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
+            if (err instanceof CustomError) {
+                return res.status(err.statusCode).json(err.getResponseError());
+            }
+            console.error(err.stack); // Log the error for debugging
+            return responseToClient(res,"",HTTP_STATUS.INTERVAL_SERVER_ERROR,"اروری اتفاق افتاد")
+        });
+    }
+    public startServer(): void {
+        this.app.listen(parseInt(process.env.PORT!, 10), () => 
+            console.log(`Listening on port localhost::${process.env.PORT}/`)
+        );
+    }
 }
-
-

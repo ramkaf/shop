@@ -1,23 +1,23 @@
 import { prisma } from "~/prisma"
 import { User } from "@prisma/client"
 import { BadRequestException } from "~/globals/middlewares/error.middleware";
-import { IAuthLogin, IAuthRegister } from "~/features/user/interface/auth.interface";
-import { IPayload } from "~/features/user/interface/payload.interface";
+import { IAuthLogin, IAuthRegister } from "~/features/user/interfaces/auth.interface";
+import { IPayload } from "~/features/user/interfaces/payload.interface";
 import { usersService } from './users.service';
 import { jwtService } from "./jwt.service";
 import { passwordService } from "./password.service";
 
 class AuthService {
     public async createUser(body: IAuthRegister): Promise<{ user: User; accessToken: string }> {
-        const { email, password, firstName, lastName, avatar } = body;
-        const hash = await passwordService.hashPassword(password)
+        const { email, password, firstName, lastName, avatar , username } = body;
         const newUser = await prisma.user.create({
           data: {
             firstName,
             lastName,
             email,
-            password : hash,
+            password,
             avatar,
+            username
           },
         });
         const payload = { firstName, lastName, email , role:newUser.role};
@@ -27,7 +27,7 @@ class AuthService {
       public async loginUser(body: IAuthLogin): Promise<{ user: User; accessToken: string }> {
         const user = await usersService.getUserByEmail(body.email)
         if (!user || !await passwordService.checkPassword(body.password , user.password)){
-          throw new BadRequestException("invalid creditinal")
+          throw new BadRequestException("invalid credential")
         }
         const {firstName , lastName , email ,role} = user;
         const payload:IPayload = {firstName , lastName , email , role};
@@ -39,6 +39,10 @@ class AuthService {
         const user = await prisma.user.findFirst({where : {email}})
         return user != null
     }
+    public async isUsernameAlreadyExist (username:string) :Promise<Boolean> {
+      const user = await prisma.user.findFirst({where : {username}})
+      return user != null
+  }
 
    
     
