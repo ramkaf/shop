@@ -18,6 +18,8 @@ class ProductsController {
 
     public async getById(req: Request, res: Response, next: NextFunction) {
         if (!Array.isArray(req.validatedParams)){
+            console.log(req.validatedParams);
+            
             const results = await productsService.readOne(req.validatedParams);    
             return responseToClient(res,results) 
         }
@@ -26,15 +28,18 @@ class ProductsController {
 
     public async create(req: Request, res: Response, next: NextFunction) {
         let results = []
+        const currentUser = req.currentUser
         if (!Array.isArray(req.validatedBody)){
             req.validatedBody.uniqueString = generateUniqueString()
             req.validatedBody.slug = stringToSlug(req.validatedBody.title)
+            req.validatedBody.currentUser = currentUser;
             results.push(await productsService.add(req.validatedBody));
             return responseToClient(res,results,HTTP_STATUS.CREATED);
         }
         results = await Promise.all(req.validatedBody.map(async (item) => {
             item.uniqueString = generateUniqueString()
             item.slug = stringToSlug(item.title)
+            item.currentUser = currentUser
             return (await productsService.add(item));
         }));
         return responseToClient(res, results, HTTP_STATUS.CREATED);

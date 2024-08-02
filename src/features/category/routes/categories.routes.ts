@@ -4,7 +4,10 @@ import 'express-async-errors'
 import { categoriesController } from '../controllers/categories.controller'; // Adjust path as necessary
 import { validateBodySchema, validateParamSchema , validateQuerySchema } from './../../../globals/middlewares/validate.middleware';
 import { createCategorySchema, getOneCategorySchema, updateCategorySchema , getAllCategoriesSchema } from '../schemas/categories.schema';
+import { isAdmin } from '~/globals/middlewares/auth.middleware';
 const categoriesRouter = express.Router();
+
+categoriesRouter.use(isAdmin)
 
 categoriesRouter.get('/', validateBodySchema(getAllCategoriesSchema),categoriesController.getAll);
 categoriesRouter.get('/:dkp', validateParamSchema(getOneCategorySchema),categoriesController.getById);

@@ -9,7 +9,6 @@ const createProductSchema = Joi.alternatives().try(
         quantity:Joi.number().required(),
         mainImage: Joi.string().required(),
         categoryId : Joi.number().required(),
-        userId : Joi.number().required()
     }),
     Joi.array().items(Joi.object({
         title : Joi.string().required(),
@@ -17,8 +16,7 @@ const createProductSchema = Joi.alternatives().try(
         shortDescription:Joi.string().required(),
         quantity:Joi.number().required(),
         mainImage: Joi.string().required(),
-        categoryId : Joi.number().required(),
-        userId : Joi.number().required()
+        categoryId : Joi.number().required()
     }))
 );
 const updateProductSchema = Joi.alternatives().try(

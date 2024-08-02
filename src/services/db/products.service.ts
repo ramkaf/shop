@@ -2,27 +2,29 @@ import { Product } from "@prisma/client";
 import { IProductCreate, IProductGetOne, IProductUpdate } from "~/features/product/interfaces/products.interface";
 import { IWhere } from "~/globals/interfaces/global.interface";
 import { GetAllOptions, PaginatedResult } from "~/globals/interfaces/global.interface";
-import { NotFoundException } from "~/globals/middlewares/error.middleware";
+import { BadRequestException, NotFoundException } from "~/globals/middlewares/error.middleware";
 import { prisma } from "~/prisma";
 import { generateWhere } from '~/globals/utils/helper';
 
 class ProductsService {
-    public async add (productCreate:IProductCreate){
-        const {title , longDescription , shortDescription , quantity , mainImage , categoryId , uniqueString , slug , userId} = productCreate;
+    public async add (productCreate:IProductCreate){        
+        const {title , longDescription , shortDescription , quantity , mainImage , categoryId , uniqueString , slug,currentUser} = productCreate;
         const product = await prisma.product.create({
             data : {
-                title , longDescription , shortDescription , quantity , mainImage , categoryId , uniqueString , slug , userId
+                title , longDescription , shortDescription , quantity , mainImage , categoryId , uniqueString , slug , userId:currentUser.id
             }
         })
         return product;
     }
     public async readOne (productGetOne:IProductGetOne){
         const {dkp} = productGetOne;
-        const product = await prisma.product.findFirstOrThrow({
+        const product = await prisma.product.findFirst({
             where : {
                 uniqueString:dkp
             }
         })
+        if (!product)
+            throw new BadRequestException('no product found')
         return product;
     }
     public async read(getAllOptions: GetAllOptions , where:IWhere): Promise<PaginatedResult<Product>> {
@@ -52,8 +54,6 @@ class ProductsService {
             [sortBy]: sortDir,
           },
         });
-        
-      
         return {
           data: products,
           totalItems,
@@ -76,18 +76,19 @@ class ProductsService {
                 categoryId
             }
         });
+        if (!product)
+            throw new BadRequestException('no product found')
         return product;
     }
     public async remove (productGetOne:IProductGetOne){
-
-
-        
         const {dkp} = productGetOne;
         const product = await prisma.product.delete({
             where : {
                 uniqueString:dkp
             }
         })
+        if (!product)
+            throw new BadRequestException("product associated with this dkp is not accessible")
         return product;
     }
 }

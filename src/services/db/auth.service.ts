@@ -20,7 +20,7 @@ class AuthService {
             username
           },
         });
-        const payload = { firstName, lastName, email , role:newUser.role};
+        const payload = { id:newUser.id ,firstName, lastName, email , role:newUser.role};
         const accessToken = await jwtService.generateAccessToken(payload)
         return { user: newUser, accessToken }; // Changed newUser to user
       } 
@@ -29,8 +29,8 @@ class AuthService {
         if (!user || !await passwordService.checkPassword(body.password , user.password)){
           throw new BadRequestException("invalid credential")
         }
-        const {firstName , lastName , email ,role} = user;
-        const payload:IPayload = {firstName , lastName , email , role};
+        const {id , firstName , lastName , email ,role} = user;
+        const payload:IPayload = {id ,firstName , lastName , email , role};
         const accessToken = await jwtService.generateAccessToken(payload);
         return { user:user! , accessToken }; // Changed newUser to user
       } 

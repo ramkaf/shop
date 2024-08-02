@@ -6,7 +6,7 @@ const authMiddleware = async (req: Request, res: Response, next: NextFunction) =
   const authHeader = req.headers['authorization'];
   
   if (!authHeader || !authHeader.startsWith('Bearer ')) {
-    throw new UnAuthorizedException("Token is invalid ... please login again");
+     return next()
   }
 
   const token = authHeader.split(' ')[1];
@@ -16,15 +16,20 @@ const authMiddleware = async (req: Request, res: Response, next: NextFunction) =
     req.currentUser = decoded;
     next();
   } catch (error) {
-    throw new UnAuthorizedException("Token is invalid ... please login again");
+    next();
   }
 };
 
 const isLogged = (req: Request, res: Response, next: NextFunction) => {
     if (!req.currentUser) {
-      throw new ForbiddenException("access denied");
+      throw new ForbiddenException("access denied ... only for logged client");
     }
     next();
   };
-
-export { authMiddleware , isLogged };
+  const isAdmin = (req: Request, res: Response, next: NextFunction) => {
+    if (!req.currentUser || req.currentUser.role !== 'ADMIN') {
+      throw new ForbiddenException("access denied ... only for Admins");
+    }
+    next();
+  };
+export { authMiddleware , isLogged ,isAdmin};

@@ -32,17 +32,7 @@ export const validateParamSchema = (schema : Schema) =>{
         next();
     }
 }
-// export const validateParamSchema = (schema : Schema) =>{
-//     return (req: Request, res: Response, next: NextFunction) => {
-//         const { error, value } = schema.validate(req.params);
-//         if (error) {
-//             let errorMessages = formatJoiMessage(error.details)
-//             return responseToClient(res,errorMessages,HTTP_STATUS.BAD_REQUEST,"ارور در اعتبارسنجی دیتا های ارسال شده")
-//         }
-//         req.validatedParams = value; // Store validated value
-//         next();
-//     };
-// }
+
 export const validateQuerySchema = (schema : Schema) =>{
     return (req:Request , res:Response , next:NextFunction)=>{
         try {            

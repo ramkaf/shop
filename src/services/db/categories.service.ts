@@ -3,6 +3,7 @@ import { ICategoryCreate, ICategoryGetOne, ICategoryUpdate } from "~/features/ca
 import { prisma } from "~/prisma";
 import { PaginatedResult, GetAllOptions } from '../../globals/interfaces/global.interface';
 import { IWhere } from '~/globals/interfaces/global.interface';
+import { BadRequestException } from "~/globals/middlewares/error.middleware";
 
 class CategoriesService {
     public async add (body:ICategoryCreate) : Promise<Category>{
@@ -47,30 +48,36 @@ class CategoriesService {
       }
     public async readOne (param:ICategoryGetOne) : Promise<Category | null>{
             const {dkp} = param;
-            const category = await prisma.category.findFirstOrThrow({
+            const category = await prisma.category.findFirst({
                 where : {
                     uniqueString:dkp,
                     status : true
                 }
             })
+            if (!category)
+                throw new BadRequestException('no category found')
             return category 
     }
     public async update(body: ICategoryUpdate): Promise<Category | null> {
         const { dkp, title, icon } = body;
-            const result = await prisma.category.update({
+            const category = await prisma.category.update({
                 where: { uniqueString:dkp },
                 data: { title, icon },
             });
-            return result;
+            if (!category)
+                throw new BadRequestException('no category found')
+            return category;
     }
     public async delete (body:ICategoryGetOne) : Promise<Category | null>{
         const {dkp} = body;
-        const result = await prisma.category.delete({
+        const category = await prisma.category.delete({
             where: {
                 uniqueString:dkp,
             }
         });
-        return result;
+        if (!category)
+            throw new BadRequestException('no category found')
+        return category;
     }
 }
 

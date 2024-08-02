@@ -1,4 +1,4 @@
-
+import { IPayload } from "../../user/interfaces/payload.interface";
 export interface IProductCreate {
     title : string;
     longDescription:string
@@ -8,7 +8,7 @@ export interface IProductCreate {
     uniqueString : string
     mainImage:string
     categoryId:number,
-    userId : number
+    currentUser : IPayload
 }
 
 export interface IProductUpdate {

@@ -6,6 +6,7 @@ import appRoutes from './globals/routes/appRoutes';
 import { CustomError, errorHandler, NotFoundException } from './globals/middlewares/error.middleware';
 import { responseToClient } from './globals/utils/helper';
 import { HTTP_STATUS } from './globals/constants/http';
+import { authMiddleware } from './globals/middlewares/auth.middleware';
 
 export class Server {
     private app: Application;
@@ -21,6 +22,7 @@ export class Server {
     }
     private setupMiddlewares(): void {
         this.app.use(express.json());
+        this.app.use(authMiddleware)
     }
     private setupRoutes(): void {
         appRoutes(this.app);
