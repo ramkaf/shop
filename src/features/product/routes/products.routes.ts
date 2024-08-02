@@ -10,6 +10,6 @@ productsRouter.get('/', validateBodySchema(getAllProductsSchema),productsControl
 productsRouter.get('/:dkp/',validateParamSchema(getOneProductSchema),productsController.getById);
 productsRouter.post('/', validateBodySchema(createProductSchema), productsController.create);
 productsRouter.put('/',validateBodySchema(updateProductSchema),productsController.update);
-productsRouter.delete('/:dkp',validateParamSchema(getOneProductSchema), productsController.delete);   
+productsRouter.delete('/:dkp',validateBodySchema(getOneProductSchema), productsController.delete);   
 
 export default productsRouter;

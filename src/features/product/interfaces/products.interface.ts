@@ -7,7 +7,8 @@ export interface IProductCreate {
     slug : string
     uniqueString : string
     mainImage:string
-    categoryId:number
+    categoryId:number,
+    userId : number
 }
 
 export interface IProductUpdate {

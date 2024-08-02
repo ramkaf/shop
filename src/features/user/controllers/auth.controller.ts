@@ -8,9 +8,9 @@ export class AuthController {
     public async register(req:Request,res:Response,next:NextFunction){
         const {firstName , lastName , username , password , email , avatar} = req.validatedBody;
         if (await authService.isEmailAlreadyExist(email))
-            return next( new BadRequestException("Email is already existed.."))  
+            throw new BadRequestException("email are already existed ...")
         if (await authService.isUsernameAlreadyExist(username))
-            return next( new BadRequestException("Username is already taken.."))  
+            throw new BadRequestException("username are already taken...")
         const hashPassword = await passwordService.hashPassword(password)
         const data = await authService.createUser({firstName ,lastName , email , username , password:hashPassword , avatar})
         return res.status(HTTP_STATUS.CREATED).json({message:"user created successfully ", data});
