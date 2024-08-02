@@ -2,6 +2,7 @@ import { Category } from "@prisma/client";
 import { ICategoryCreate, ICategoryGetOne, ICategoryUpdate } from "~/features/category/interfaces/categories.interface";
 import { prisma } from "~/prisma";
 import { PaginatedResult, GetAllOptions } from '../../globals/interfaces/global.interface';
+import { IWhere } from '~/globals/interfaces/global.interface';
 
 class CategoriesService {
     public async add (body:ICategoryCreate) : Promise<Category>{
@@ -13,17 +14,10 @@ class CategoriesService {
         })
         return category
     }
-    public async read(getAllOptions:GetAllOptions): Promise<PaginatedResult<Category>> {
+    public async read(getAllOptions:GetAllOptions , where:IWhere): Promise<PaginatedResult<Category>> {
         const {page , limit,sortBy,sortDir}= getAllOptions;
         const skip = (page - 1) * limit;
         const totalItems = await prisma.category.count();
-        const categories: Category[] = await prisma.category.findMany({
-          skip,
-          take: limit,
-          orderBy: {
-            [sortBy]: sortDir,
-          },
-        });
         const totalPages = Math.ceil(totalItems / limit);  
         if (page > totalPages) {
             return {
@@ -34,6 +28,15 @@ class CategoriesService {
                 limit,
             }
         }
+        const categories: Category[] = await prisma.category.findMany({
+          skip,
+          take: limit,
+          where,
+          orderBy: {
+            [sortBy]: sortDir,
+          },
+        });
+       
         return {
           data: categories,
           totalItems,

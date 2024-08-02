@@ -8,10 +8,10 @@ import { generateWhere } from '~/globals/utils/helper';
 
 class ProductsService {
     public async add (productCreate:IProductCreate){
-        const {title , longDescription , shortDescription , quantity , mainImage , categoryId , uniqueString , slug} = productCreate;
+        const {title , longDescription , shortDescription , quantity , mainImage , categoryId , uniqueString , slug , userId} = productCreate;
         const product = await prisma.product.create({
             data : {
-                title , longDescription , shortDescription , quantity , mainImage , categoryId , uniqueString , slug
+                title , longDescription , shortDescription , quantity , mainImage , categoryId , uniqueString , slug , userId
             }
         })
         return product;
@@ -33,15 +33,7 @@ class ProductsService {
         if (page < 1 || limit < 1) {
           throw new NotFoundException('Invalid page or limit value');
         }
-        const products = await prisma.product.findMany({
-          skip,
-          take: limit,
-          where,      
-          orderBy: {
-            [sortBy]: sortDir,
-          },
-        });
-        const totalItems = await products.length;
+        const totalItems = await prisma.product.count();
         const totalPages = Math.ceil(totalItems / limit);
         if (page > totalPages) {
             return {
@@ -52,6 +44,15 @@ class ProductsService {
              limit
             }
          }
+        const products = await prisma.product.findMany({
+          skip,
+          take: limit,
+          where,      
+          orderBy: {
+            [sortBy]: sortDir,
+          },
+        });
+        
       
         return {
           data: products,
@@ -78,6 +79,9 @@ class ProductsService {
         return product;
     }
     public async remove (productGetOne:IProductGetOne){
+
+
+        
         const {dkp} = productGetOne;
         const product = await prisma.product.delete({
             where : {
