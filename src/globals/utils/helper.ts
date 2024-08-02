@@ -1,4 +1,6 @@
 import { Response } from "express";
+import { IFilter, ISearch } from "../interfaces/global.interface";
+import { any, string } from "joi";
 
 export function responseToClient (res:Response , data:any , statusCode  : number = 200 , message:string = "عملیات با موفقیت انجام شد"){
     return res.status(statusCode).json({
@@ -26,3 +28,38 @@ export function stringToSlug(str:string) {
       .replace(/\s+/g, '-') // Replace spaces with hyphens
       .replace(/-+/g, '-'); // Replace multiple hyphens with a single hyphen
 }
+
+export function generateWhere(filters: IFilter[], searches: ISearch[]): Record<string, any> {
+    const where: Record<string, any> = {};
+  
+    // Handle filters
+    if (filters && filters.length > 0) {
+      filters.forEach((item: IFilter) => {
+        const { field, condition, value } = item;
+  
+        // Ensure the where object for the field exists
+        if (!where[field]) {
+          where[field] = {};
+        }
+  
+        // Set the condition with its value
+        where[field][condition] = value;
+      });
+    }
+  
+    // Handle searches
+    if (searches && searches.length > 0) {
+      const searchConditions = searches.map((item) => {
+        return item.fields.map((field: string) => ({
+          [field]: {
+            contains: item.value.toLowerCase(),
+          },
+        }));
+      });
+  
+      // Combine search conditions into a single OR condition
+      where.OR = searchConditions.flat();
+    }
+  
+    return where;
+  }

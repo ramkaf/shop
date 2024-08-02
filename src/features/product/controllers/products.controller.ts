@@ -4,13 +4,16 @@ import 'express-async-errors'
 import { HTTP_STATUS } from "~/globals/constants/http";
 import { prisma } from "~/prisma";
 import { productsService } from "~/services/db/products.service";
-import { generateUniqueString, responseToClient, stringToSlug } from "~/globals/utils/helper";
+import { generateUniqueString, generateWhere, responseToClient, stringToSlug } from "~/globals/utils/helper";
 import { UtilsConstants } from "~/globals/constants/utils.constants";
+import { IFilter } from "~/globals/interfaces/global.interface";
 
 class ProductsController {
     public async getAll(req: Request, res: Response, next: NextFunction) {
-        const { page = UtilsConstants.PAGE_DEFAULT, limit = UtilsConstants.LIMIT_DEFAULT ,sortBy = UtilsConstants.SORTBY_DEFAULT , sortDir = UtilsConstants.SORT_DIR_DEFAULT } = req.validatedQueries;
-        const results = await productsService.read({page , limit , sortBy , sortDir });
+        const { page = UtilsConstants.PAGE_DEFAULT, limit = UtilsConstants.LIMIT_DEFAULT ,sortBy = UtilsConstants.SORTBY_DEFAULT , sortDir = UtilsConstants.SORT_DIR_DEFAULT } = req.validatedBody;
+        const {filters , searches = []} = req.validatedBody;
+        const where = generateWhere(filters ,searches)
+        const results = await productsService.read({page , limit , sortBy , sortDir },where);
         return responseToClient(res,results,HTTP_STATUS.CREATED);
     }
     public async getById(req: Request, res: Response, next: NextFunction) {

@@ -1,8 +1,7 @@
 import { Category } from "@prisma/client";
 import { ICategoryCreate, ICategoryGetOne, ICategoryUpdate } from "~/features/category/interfaces/categories.interface";
 import { prisma } from "~/prisma";
-import { PaginatedResult, GetAllOptions } from '../../globals/interfaces/pagination.interface';
-import { BadRequestException, NotFoundException } from "~/globals/middlewares/error.middleware";
+import { PaginatedResult, GetAllOptions } from '../../globals/interfaces/global.interface';
 
 class CategoriesService {
     public async add (body:ICategoryCreate) : Promise<Category>{

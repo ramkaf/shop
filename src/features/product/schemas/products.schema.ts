@@ -14,9 +14,22 @@ const getOneProductSchema = Joi.object({
 });
 const getAllProductsSchema = Joi.object({
     page: Joi.number().integer().optional(),
-    limit : Joi.number().integer().optional(),
-    sortBy : Joi.string().optional(),
-    sortDir : Joi.string().optional()
+    limit: Joi.number().integer().optional(),
+    sortBy: Joi.string().optional(),
+    sortDir: Joi.string().optional(),
+    filters: Joi.array().items(
+        Joi.object({
+            field: Joi.string().required(),
+            condition: Joi.string().valid('equals' ,     'not' , 'in' , 'notIn' , 'lt' , 'lte' , 'gt' , 'gte' , 'contains' , 'startsWith' , 'endsWith').required(),
+            value: Joi.alternatives().try(Joi.number(), Joi.string()).required()
+        })
+    ).optional(),
+    searches: Joi.array().items(
+        Joi.object({
+            fields: Joi.array().items(Joi.string()).required(),
+            value: Joi.string().required()
+        })
+    ).optional()
 });
 const updateProductSchema = Joi.object({
     dkp: Joi.string().required(),

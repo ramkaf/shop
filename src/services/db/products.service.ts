@@ -1,8 +1,10 @@
 import { Product } from "@prisma/client";
 import { IProductCreate, IProductGetOne, IProductUpdate } from "~/features/product/interfaces/products.interface";
-import { GetAllOptions, PaginatedResult } from "~/globals/interfaces/pagination.interface";
+import { IWhere } from "~/globals/interfaces/global.interface";
+import { GetAllOptions, PaginatedResult } from "~/globals/interfaces/global.interface";
 import { NotFoundException } from "~/globals/middlewares/error.middleware";
 import { prisma } from "~/prisma";
+import { generateWhere } from '~/globals/utils/helper';
 
 class ProductsService {
     public async add (productCreate:IProductCreate){
@@ -23,30 +25,33 @@ class ProductsService {
         })
         return product;
     }
-    public async read(getAllOptions: GetAllOptions): Promise<PaginatedResult<Product>> {
+    public async read(getAllOptions: GetAllOptions , where:IWhere): Promise<PaginatedResult<Product>> {
         const { page , limit , sortBy , sortDir } = getAllOptions;
+        
+        
         const skip = (page - 1) * limit;
         if (page < 1 || limit < 1) {
           throw new NotFoundException('Invalid page or limit value');
         }
-        const totalItems = await prisma.product.count();
-        const totalPages = Math.ceil(totalItems / limit);
-        if (page > totalPages) {
-           return {
-            data: [],
-            totalItems : 0,
-            totalPages : 0,
-            currentPage: page,
-            limit
-           }
-        }
         const products = await prisma.product.findMany({
           skip,
           take: limit,
+          where,      
           orderBy: {
             [sortBy]: sortDir,
           },
         });
+        const totalItems = await products.length;
+        const totalPages = Math.ceil(totalItems / limit);
+        if (page > totalPages) {
+            return {
+             data: [],
+             totalItems : 0,
+             totalPages : 0,
+             currentPage: page,
+             limit
+            }
+         }
       
         return {
           data: products,
