@@ -7,7 +7,7 @@ import { CustomError, errorHandler, NotFoundException } from './globals/middlewa
 import { responseToClient } from './globals/utils/helper'
 import { HTTP_STATUS } from './globals/constants/http'
 import { authMiddleware } from './globals/middlewares/auth.middleware'
-
+import morgan from 'morgan';
 export class Server {
   private app: Application
 
@@ -21,6 +21,7 @@ export class Server {
     this.startServer()
   }
   private setupMiddlewares(): void {
+    this.app.use(morgan('tiny'))
     this.app.use(express.json())
     this.app.use(authMiddleware)
   }

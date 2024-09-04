@@ -4,7 +4,8 @@ import { IWhere } from '~/globals/interfaces/global.interface'
 import { GetAllOptions, PaginatedResult } from '~/globals/interfaces/global.interface'
 import { BadRequestException, NotFoundException } from '~/globals/middlewares/error.middleware'
 import { prisma } from '~/prisma'
-import { generateWhere } from '~/globals/utils/helper'
+import { generateWhere, responseToClient } from '~/globals/utils/helper'
+import { IPayload } from '~/features/user/interfaces/payload.interface'
 
 class ProductsService {
   public async add(productCreate: IProductCreate) {
@@ -84,10 +85,17 @@ class ProductsService {
       limit
     }
   }
-  public async update(productUpdate: IProductUpdate) {
-    const { dkp, title, longDescription, shortDescription, quantity, mainImage, categoryId, slug } = productUpdate
+  public async update(productUpdate: IProductUpdate , payload:IPayload) {
+    try {
+      const {role , id} = payload
+      const { dkp, title, longDescription, shortDescription, quantity, mainImage, categoryId, slug } = productUpdate
+      
+      const whereClause = role === 'ADMIN'
+      ? { uniqueString: dkp }
+      : { uniqueString: dkp, userId : id };
+      
     const product = await prisma.product.update({
-      where: { uniqueString: dkp },
+      where: whereClause,
       data: {
         title,
         longDescription,
@@ -98,19 +106,28 @@ class ProductsService {
         categoryId
       }
     })
-    if (!product) throw new BadRequestException('no product found')
+    // if (!product) throw new BadRequestException('no product found')
     return product
+    } catch (error) {
+      throw new BadRequestException('something goes wrong')
+    }
   }
-  public async remove(productGetOne: IProductGetOne) {
+  public async remove(productGetOne: IProductGetOne , userId:number) {
+   try {
     const { dkp } = productGetOne
     const product = await prisma.product.delete({
       where: {
-        uniqueString: dkp
+        uniqueString: dkp ,
+        userId
       }
     })
-    if (!product) throw new BadRequestException('product associated with this dkp is not accessible')
+    // if (!product) throw new BadRequestException('product associated with this dkp is not accessible')
     return product
   }
+   catch (error) {
+    throw new BadRequestException('something goes wrong') 
+   }
+}
 }
 
 export const productsService: ProductsService = new ProductsService()
