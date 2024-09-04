@@ -1,21 +1,20 @@
-
 export interface ICategoryCreate {
-    title :string,
-    icon : string,
-    uniqueString : string,
-    slug : string,
+  title: string
+  icon: string
+  uniqueString: string
+  slug: string
 }
 
 export interface ICategoryGetOne {
-    dkp :string,
+  dkp: string
 }
 
 export interface ICategoryUpdate {
-    dkp:string,
-    title :string,
-    icon : string,
+  dkp: string
+  title: string
+  icon: string
 }
 export interface ICategoryGetAll {
-   page?:number,
-   limit?:number
+  page?: number
+  limit?: number
 }

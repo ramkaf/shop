@@ -26,6 +26,7 @@ model User {
   role Role @default(USER)
   isActive Boolean @default(true)
   products Product[] 
+  categories Category[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
@@ -38,6 +39,8 @@ model Category {
   slug String @unique
   uniqueString String @unique
   products Product[] 
+  userId      Int   
+  user        User @relation(fields: [userId], references: [id])
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
