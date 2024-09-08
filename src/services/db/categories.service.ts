@@ -7,14 +7,15 @@ import { BadRequestException } from '~/globals/middlewares/error.middleware'
 
 class CategoriesService {
   public async add(body: ICategoryCreate): Promise<Category> {
-    const { title, icon, slug, uniqueString } = body
+    const { title, icon, slug, uniqueString , currentUser} = body
     const category: Category = await prisma.category.create({
       data: {
         title,
         icon,
         status: true,
         slug,
-        uniqueString
+        uniqueString,
+        userId : currentUser.id
       }
     })
     return category

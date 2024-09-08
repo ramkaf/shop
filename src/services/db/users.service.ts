@@ -12,6 +12,18 @@ class UsersService {
   }
 
   public async getMe(authorization: string | undefined) {}
+
+  public async getProductOfUser(id : number) {
+    const product = await prisma.user.findMany({
+      where: {
+        id
+      },
+      include : {
+        products : true
+      }
+    })
+    return product
+  }
 }
 
 export const usersService: UsersService = new UsersService()

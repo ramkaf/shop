@@ -32,9 +32,10 @@ export function stringToSlug(str: string) {
     .trim() // Remove whitespace from both ends of the string
     .replace(/[^a-z0-9\u0600-\u06FF\s-]/g, '') // Remove all non-alphanumeric characters except spaces, hyphens, and Persian letters
     .replace(/\s+/g, '-') // Replace spaces with hyphens
-    .replace(/-+/g, '-') // Replace multiple hyphens with a single hyphen
+    .replace(/-+/g, '-')
+    .concat(Math.floor(Math.random()*1000).toString()) // Replace multiple hyphens with a single hyphen
 }
-export function generateWhere(filters: IFilter[], searches: ISearch[]): Record<string, any> {
+export function generateWhereProduct(filters: IFilter[], searches: ISearch[]): Record<string, any> {
   const where: Record<string, any> = {}
 
   // Handle filters
@@ -62,6 +63,37 @@ export function generateWhere(filters: IFilter[], searches: ISearch[]): Record<s
       },
       {
         longDescription: {
+          contains: searches
+        }
+      }
+    ]
+  }
+
+  return where
+}
+export function generateWhereCategory(filters: IFilter[], searches: ISearch[]): Record<string, any> {
+  const where: Record<string, any> = {}
+
+  // Handle filters
+  if (filters && filters.length > 0) {
+    filters.forEach((item: IFilter) => {
+      const { field, condition, value } = item
+
+      // Ensure the where object for the field exists
+      if (!where[field]) {
+        where[field] = {}
+      }
+
+      // Set the condition with its value
+      where[field][condition] = value
+    })
+  }
+
+  // Handle searches
+  if (searches.length > 0) {
+    where.OR = [
+      {
+        title: {
           contains: searches
         }
       }

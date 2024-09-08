@@ -11,13 +11,13 @@ export const authMiddleware = async (req: Request, res: Response, next: NextFunc
       const decoded = await jwtService.verifyAccessToken(token);
       if (decoded) {
         req.currentUser = decoded;
+
       }
     }
   } catch (error) {
 
   }
   next();
-    
 };
 
 export const isLoggedIn = async (req: Request, res: Response, next: NextFunction) => {

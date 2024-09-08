@@ -2,10 +2,11 @@ import { NextFunction, Request, Response } from 'express'
 import 'express-async-errors'
 import { HTTP_STATUS } from '~/globals/constants/http'
 import { productsService } from '~/services/db/products.service'
-import { generateUniqueString, generateWhere, responseToClient, stringToSlug } from '~/globals/utils/helper'
+import { generateUniqueString, generateWhereProduct, responseToClient, stringToSlug } from '~/globals/utils/helper'
 import { UtilsConstants } from '~/globals/constants/utils.constants'
 import { BadRequestException } from '~/globals/middlewares/error.middleware'
 import { IPayload } from '~/features/user/interfaces/payload.interface'
+import { usersService } from '~/services/db/users.service'
 
 class ProductsController {
   public async getAll(req: Request, res: Response, next: NextFunction) {
@@ -16,7 +17,7 @@ class ProductsController {
       sortDir = UtilsConstants.SORT_DIR_DEFAULT
     } = req.validatedBody
     const { filters, searches = [] } = req.validatedBody
-    const where = generateWhere(filters, searches)
+    const where = generateWhereProduct(filters, searches)
     const results = await productsService.read({ page, limit, sortBy, sortDir }, where)
     return responseToClient(res, results, HTTP_STATUS.CREATED)
   }
@@ -30,24 +31,11 @@ class ProductsController {
     throw new BadRequestException('فقط یک ای دی به صورت ابجت ارسال کنید')
   }
   public async create(req: Request, res: Response, next: NextFunction) {
-    let results = []
-    const currentUser = req.currentUser
-    if (!Array.isArray(req.validatedBody)) {
       req.validatedBody.uniqueString = generateUniqueString()
       req.validatedBody.slug = stringToSlug(req.validatedBody.title)
-      req.validatedBody.currentUser = currentUser
-      results.push(await productsService.add(req.validatedBody))
-      return responseToClient(res, results, HTTP_STATUS.CREATED)
-    }
-    results = await Promise.all(
-      req.validatedBody.map(async (item) => {
-        item.uniqueString = generateUniqueString()
-        item.slug = stringToSlug(item.title)
-        item.currentUser = currentUser
-        return await productsService.add(item)
-      })
-    )
-    return responseToClient(res, results, HTTP_STATUS.CREATED)
+      req.validatedBody.currentUser = req.currentUser
+      let result = await productsService.add(req.validatedBody)
+    return responseToClient(res, result, HTTP_STATUS.CREATED)
   }
   public async update(req: Request, res: Response, next: NextFunction) {
     let results = []

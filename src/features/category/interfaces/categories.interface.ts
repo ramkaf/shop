@@ -1,8 +1,11 @@
+import { IPayload } from "~/features/user/interfaces/payload.interface"
+
 export interface ICategoryCreate {
   title: string
   icon: string
   uniqueString: string
   slug: string
+  currentUser : IPayload
 }
 
 export interface ICategoryGetOne {

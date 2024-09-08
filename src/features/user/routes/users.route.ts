@@ -6,5 +6,6 @@ import 'express-async-errors'
 const userRoute = express.Router()
 
 userRoute.get('/me', authMiddleware, isLoggedIn, userController.getMe)
+userRoute.get('/my-product', authMiddleware, isLoggedIn, userController.readMyProduct)
 
 export default userRoute

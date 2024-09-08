@@ -52,6 +52,7 @@ model Product {
   price Float @default(0)
   quantity        Int      @default(0)
   mainImage       String
+  productImage ProductImage[]
   slug String @unique 
   uniqueString String @unique 
   categoryId      Int   
@@ -60,4 +61,11 @@ model Product {
   user        User @relation(fields: [userId], references: [id])
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+model ProductImage {
+  id        Int      @id @default(autoincrement())
+  image     String
+  product   Product  @relation(fields: [productId], references: [id])
+  productId Int
 }

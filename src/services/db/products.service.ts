@@ -4,7 +4,6 @@ import { IWhere } from '~/globals/interfaces/global.interface'
 import { GetAllOptions, PaginatedResult } from '~/globals/interfaces/global.interface'
 import { BadRequestException, NotFoundException } from '~/globals/middlewares/error.middleware'
 import { prisma } from '~/prisma'
-import { generateWhere, responseToClient } from '~/globals/utils/helper'
 import { IPayload } from '~/features/user/interfaces/payload.interface'
 
 class ProductsService {
@@ -109,6 +108,8 @@ class ProductsService {
     // if (!product) throw new BadRequestException('no product found')
     return product
     } catch (error) {
+      console.log(error);
+      
       throw new BadRequestException('something goes wrong')
     }
   }
@@ -127,7 +128,7 @@ class ProductsService {
    catch (error) {
     throw new BadRequestException('something goes wrong') 
    }
-}
+  }
 }
 
 export const productsService: ProductsService = new ProductsService()

@@ -1,47 +1,20 @@
 import Joi from 'joi'
 
-const createProductSchema = Joi.alternatives().try(
-  Joi.object({
-    title: Joi.string().required(),
-    longDescription: Joi.string().required(),
-    shortDescription: Joi.string().required(),
-    quantity: Joi.number().required(),
-    mainImage: Joi.string().required(),
-    categoryId: Joi.number().required()
-  }),
-  Joi.array().items(
-    Joi.object({
-      title: Joi.string().required(),
-      longDescription: Joi.string().required(),
-      shortDescription: Joi.string().required(),
-      quantity: Joi.number().required(),
-      mainImage: Joi.string().required(),
-      categoryId: Joi.number().required()
-    })
-  )
-)
-const updateProductSchema = Joi.alternatives().try(
-  Joi.object({
-    dkp: Joi.string().required(),
-    title: Joi.string().required(),
-    longDescription: Joi.string().required(),
-    shortDescription: Joi.string().required(),
-    quantity: Joi.number().required(),
-    mainImage: Joi.string().required(),
-    categoryId: Joi.number().required()
-  }),
-  Joi.array().items(
-    Joi.object({
-      dkp: Joi.string().required(),
-      title: Joi.string().required(),
-      longDescription: Joi.string().required(),
-      shortDescription: Joi.string().required(),
-      quantity: Joi.number().required(),
-      mainImage: Joi.string().required(),
-      categoryId: Joi.number().required()
-    })
-  )
-)
+const createProductSchema =   Joi.object({
+  title: Joi.string().required(),
+  longDescription: Joi.string().required(),
+  shortDescription: Joi.string().required(),
+  quantity: Joi.number().required(),
+  categoryId: Joi.number().required()
+})
+const updateProductSchema = Joi.object({
+  dkp: Joi.string().required(),
+  title: Joi.string().required(),
+  longDescription: Joi.string().required(),
+  shortDescription: Joi.string().required(),
+  quantity: Joi.number().required(),
+  categoryId: Joi.number().required()
+})
 const getOneProductSchema = Joi.alternatives().try(
   Joi.object({
     dkp: Joi.string().required()
