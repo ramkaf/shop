@@ -1,4 +1,4 @@
-import { Application } from 'express'
+﻿import { Application } from 'express'
 import 'dotenv/config'
 import 'express-async-errors'
 import express, { Request, Response, NextFunction } from 'express'
@@ -11,7 +11,6 @@ import morgan from 'morgan';
 import path from 'path'
 export class Server {
   private app: Application
-
   constructor(app: Application) {
     this.app = app
   }
@@ -34,13 +33,12 @@ export class Server {
     this.app.all('*', (req: Request, res: Response, next: NextFunction) => {
       return next(new NotFoundException(`The URL ${req.originalUrl} not found`))
     })
-
     this.app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
       if (err instanceof CustomError) {
         return res.status(err.statusCode).json(err.getResponseError())
       }
-      console.error(err.stack) // Log the error for debugging
-      return responseToClient(res, '', HTTP_STATUS.INTERVAL_SERVER_ERROR, 'اروری اتفاق افتاد')
+      console.error(err.stack) 
+      return responseToClient(res, '', HTTP_STATUS.INTERVAL_SERVER_ERROR, 'Ø§Ø±ÙˆØ±ÛŒ Ø§ØªÙØ§Ù‚ Ø§ÙØªØ§Ø¯')
     })
   }
   public startServer(): void {

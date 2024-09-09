@@ -1,4 +1,4 @@
-import 'express-async-errors'
+﻿import 'express-async-errors'
 import jwt from 'jsonwebtoken'
 import { IPayload } from '~/features/user/interfaces/payload.interface'
 class JwtService {
@@ -11,5 +11,4 @@ class JwtService {
     return payload
   }
 }
-
 export const jwtService = new JwtService()

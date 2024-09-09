@@ -1,5 +1,4 @@
-import { IPayload } from "~/features/user/interfaces/payload.interface"
-
+﻿import { IPayload } from "~/features/user/interfaces/payload.interface"
 export interface ICategoryCreate {
   title: string
   icon: string
@@ -7,11 +6,9 @@ export interface ICategoryCreate {
   slug: string
   currentUser : IPayload
 }
-
 export interface ICategoryGetOne {
   dkp: string
 }
-
 export interface ICategoryUpdate {
   dkp: string
   title: string

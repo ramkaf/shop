@@ -1,11 +1,10 @@
-import { Product } from '@prisma/client'
+﻿import { Product } from '@prisma/client'
 import { IProductCreate, IProductGetOne, IProductUpdate } from '~/features/product/interfaces/products.interface'
 import { IWhere } from '~/globals/interfaces/global.interface'
 import { GetAllOptions, PaginatedResult } from '~/globals/interfaces/global.interface'
 import { BadRequestException, NotFoundException } from '~/globals/middlewares/error.middleware'
 import { prisma } from '~/prisma'
 import { IPayload } from '~/features/user/interfaces/payload.interface'
-
 class ProductsService {
   public async add(productCreate: IProductCreate) {
     const {
@@ -46,7 +45,6 @@ class ProductsService {
   }
   public async read(getAllOptions: GetAllOptions, where: IWhere): Promise<PaginatedResult<Product>> {
     const { page, limit, sortBy, sortDir } = getAllOptions
-
     const skip = (page - 1) * limit
     if (page < 1 || limit < 1) {
       throw new NotFoundException('Invalid page or limit value')
@@ -57,7 +55,6 @@ class ProductsService {
         [sortBy]: sortDir
       }
     })
-
     const totalPages = Math.ceil(totalItems / limit)
     if (page > totalPages) {
       return {
@@ -88,11 +85,9 @@ class ProductsService {
     try {
       const {role , id} = payload
       const { dkp, title, longDescription, shortDescription, quantity, mainImage, categoryId, slug } = productUpdate
-      
       const whereClause = role === 'ADMIN'
       ? { uniqueString: dkp }
       : { uniqueString: dkp, userId : id };
-      
     const product = await prisma.product.update({
       where: whereClause,
       data: {
@@ -105,11 +100,9 @@ class ProductsService {
         categoryId
       }
     })
-    // if (!product) throw new BadRequestException('no product found')
     return product
     } catch (error) {
       console.log(error);
-      
       throw new BadRequestException('something goes wrong')
     }
   }
@@ -122,7 +115,6 @@ class ProductsService {
         userId
       }
     })
-    // if (!product) throw new BadRequestException('product associated with this dkp is not accessible')
     return product
   }
    catch (error) {
@@ -130,5 +122,4 @@ class ProductsService {
    }
   }
 }
-
 export const productsService: ProductsService = new ProductsService()

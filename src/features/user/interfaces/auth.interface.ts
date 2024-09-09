@@ -1,4 +1,4 @@
-export interface IAuthRegister {
+﻿export interface IAuthRegister {
   email: string
   firstName: string
   lastName: string

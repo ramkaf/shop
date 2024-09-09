@@ -1,12 +1,11 @@
-import { Response } from 'express'
+﻿import { Response } from 'express'
 import { IFilter, ISearch } from '../interfaces/global.interface'
 import { any, string } from 'joi'
-
 export function responseToClient(
   res: Response,
   data: any,
   statusCode: number = 200,
-  message: string = 'عملیات با موفقیت انجام شد'
+  message: string = 'Ø¹Ù…Ù„ÛŒØ§Øª Ø¨Ø§ Ù…ÙˆÙÙ‚ÛŒØª Ø§Ù†Ø¬Ø§Ù… Ø´Ø¯'
 ) {
   return res.status(statusCode).json({
     message,
@@ -21,39 +20,31 @@ export function getDefaultPaginationOptions() {
 }
 export function generateUniqueString() {
   const prefix = 'dkp-'
-  const timestamp = Date.now() // Current timestamp
-  const randomNum = Math.floor(Math.random() * 1000000) // Random number between 0 and 9999
-  const uniqueNumber = (timestamp + randomNum).toString().slice(-10) // Ensure the number is 7 digits long
+  const timestamp = Date.now() 
+  const randomNum = Math.floor(Math.random() * 1000000) 
+  const uniqueNumber = (timestamp + randomNum).toString().slice(-10) 
   return prefix + uniqueNumber
 }
 export function stringToSlug(str: string) {
   return str
-    .toLowerCase() // Convert the string to lowercase
-    .trim() // Remove whitespace from both ends of the string
-    .replace(/[^a-z0-9\u0600-\u06FF\s-]/g, '') // Remove all non-alphanumeric characters except spaces, hyphens, and Persian letters
-    .replace(/\s+/g, '-') // Replace spaces with hyphens
+    .toLowerCase() 
+    .trim() 
+    .replace(/[^a-z0-9\u0600-\u06FF\s-]/g, '') 
+    .replace(/\s+/g, '-') 
     .replace(/-+/g, '-')
-    .concat(Math.floor(Math.random()*1000).toString()) // Replace multiple hyphens with a single hyphen
+    .concat(Math.floor(Math.random()*1000).toString()) 
 }
 export function generateWhereProduct(filters: IFilter[], searches: ISearch[]): Record<string, any> {
   const where: Record<string, any> = {}
-
-  // Handle filters
   if (filters && filters.length > 0) {
     filters.forEach((item: IFilter) => {
       const { field, condition, value } = item
-
-      // Ensure the where object for the field exists
       if (!where[field]) {
         where[field] = {}
       }
-
-      // Set the condition with its value
       where[field][condition] = value
     })
   }
-
-  // Handle searches
   if (searches.length > 0) {
     where.OR = [
       {
@@ -68,28 +59,19 @@ export function generateWhereProduct(filters: IFilter[], searches: ISearch[]): R
       }
     ]
   }
-
   return where
 }
 export function generateWhereCategory(filters: IFilter[], searches: ISearch[]): Record<string, any> {
   const where: Record<string, any> = {}
-
-  // Handle filters
   if (filters && filters.length > 0) {
     filters.forEach((item: IFilter) => {
       const { field, condition, value } = item
-
-      // Ensure the where object for the field exists
       if (!where[field]) {
         where[field] = {}
       }
-
-      // Set the condition with its value
       where[field][condition] = value
     })
   }
-
-  // Handle searches
   if (searches.length > 0) {
     where.OR = [
       {
@@ -99,6 +81,5 @@ export function generateWhereCategory(filters: IFilter[], searches: ISearch[]): 
       }
     ]
   }
-
   return where
 }

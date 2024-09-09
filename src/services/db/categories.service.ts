@@ -1,10 +1,9 @@
-import { Category } from '@prisma/client'
+﻿import { Category } from '@prisma/client'
 import { ICategoryCreate, ICategoryGetOne, ICategoryUpdate } from '~/features/category/interfaces/categories.interface'
 import { prisma } from '~/prisma'
 import { PaginatedResult, GetAllOptions } from '../../globals/interfaces/global.interface'
 import { IWhere } from '~/globals/interfaces/global.interface'
 import { BadRequestException } from '~/globals/middlewares/error.middleware'
-
 class CategoriesService {
   public async add(body: ICategoryCreate): Promise<Category> {
     const { title, icon, slug, uniqueString , currentUser} = body
@@ -42,7 +41,6 @@ class CategoriesService {
         [sortBy]: sortDir
       }
     })
-
     return {
       data: categories,
       totalItems,
@@ -82,5 +80,4 @@ class CategoriesService {
     return category
   }
 }
-
 export const categoriesService: CategoriesService = new CategoriesService()

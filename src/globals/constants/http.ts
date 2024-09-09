@@ -1,4 +1,4 @@
-export class HTTP_STATUS {
+﻿export class HTTP_STATUS {
   public static OK = 200
   public static CREATED = 201
   public static BAD_REQUEST = 400

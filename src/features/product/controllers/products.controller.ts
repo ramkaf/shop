@@ -1,4 +1,4 @@
-import { NextFunction, Request, Response } from 'express'
+﻿import { NextFunction, Request, Response } from 'express'
 import 'express-async-errors'
 import { HTTP_STATUS } from '~/globals/constants/http'
 import { productsService } from '~/services/db/products.service'
@@ -7,7 +7,6 @@ import { UtilsConstants } from '~/globals/constants/utils.constants'
 import { BadRequestException } from '~/globals/middlewares/error.middleware'
 import { IPayload } from '~/features/user/interfaces/payload.interface'
 import { usersService } from '~/services/db/users.service'
-
 class ProductsController {
   public async getAll(req: Request, res: Response, next: NextFunction) {
     const {
@@ -24,15 +23,13 @@ class ProductsController {
   public async getById(req: Request, res: Response, next: NextFunction) {
     if (!Array.isArray(req.validatedParams)) {
       console.log(req.validatedParams)
-
       const results = await productsService.readOne(req.validatedParams)
       return responseToClient(res, results)
     }
-    throw new BadRequestException('فقط یک ای دی به صورت ابجت ارسال کنید')
+    throw new BadRequestException('ÙÙ‚Ø· ÛŒÚ© Ø§ÛŒ Ø¯ÛŒ Ø¨Ù‡ ØµÙˆØ±Øª Ø§Ø¨Ø¬Øª Ø§Ø±Ø³Ø§Ù„ Ú©Ù†ÛŒØ¯')
   }
   public async create(req: Request, res: Response, next: NextFunction) {
     console.log(req.file);
-    
     if (!req.file)
       return res.status(400).send({errorMessages: ["image is required"]})
       const data = {
@@ -44,7 +41,6 @@ class ProductsController {
         slug : stringToSlug(req.validatedBody.title),
         currentUser : req.currentUser,
       }
-      
     let result = await productsService.add(data)
     return responseToClient(res, result, HTTP_STATUS.CREATED)
   }
@@ -61,7 +57,6 @@ class ProductsController {
       }
       if (req.file)
         data.mainImage = req.file!.path
-      
       let result = await productsService.update(req.validatedBody , req.currentUser as IPayload)
       return responseToClient(res, result, HTTP_STATUS.OK)
     return responseToClient(res, result)

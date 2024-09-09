@@ -1,4 +1,4 @@
-import bcrypt from 'bcrypt'
+﻿import bcrypt from 'bcrypt'
 class PasswordService {
   public async checkPassword(password: string, hash: string): Promise<Boolean> {
     return await bcrypt.compare(password, hash)

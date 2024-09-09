@@ -1,4 +1,4 @@
-import { NextFunction, Request, Response } from 'express'
+﻿import { NextFunction, Request, Response } from 'express'
 import { HTTP_STATUS } from '~/globals/constants/http'
 import 'express-async-errors'
 import { categoriesService } from '~/services/db/categories.service'
@@ -7,7 +7,6 @@ import { UtilsConstants } from '~/globals/constants/utils.constants'
 import { Category } from '@prisma/client'
 import { ICategoryCreate, ICategoryGetOne } from '../interfaces/categories.interface'
 import { BadRequestException } from '~/globals/middlewares/error.middleware'
-
 class CategoriesController {
   public async getAll(req: Request, res: Response, next: NextFunction) {
     const {
@@ -26,7 +25,7 @@ class CategoriesController {
       const results = await categoriesService.readOne(req.validatedParams)
       return responseToClient(res, results)
     }
-    throw new BadRequestException('فقط یک ای دی به صورت ابجت ارسال کنید')
+    throw new BadRequestException('ÙÙ‚Ø· ÛŒÚ© Ø§ÛŒ Ø¯ÛŒ Ø¨Ù‡ ØµÙˆØ±Øª Ø§Ø¨Ø¬Øª Ø§Ø±Ø³Ø§Ù„ Ú©Ù†ÛŒØ¯')
   }
   public async create(req: Request, res: Response, next: NextFunction) {
       req.validatedBody.slug = stringToSlug(req.validatedBody.title)
@@ -37,16 +36,13 @@ class CategoriesController {
   }
   public async update(req: Request, res: Response, next: NextFunction) {
     console.log(req.currentUser);
-    
       req.validatedBody.slug = stringToSlug(req.validatedBody.title)
       let results =  await categoriesService.update(req.validatedBody)
       return responseToClient(res, results)
   }
-
   public async delete(req: Request, res: Response, next: NextFunction) {
       let result = await categoriesService.delete(req.validatedParams)
       return responseToClient(res, result)
   }
 }
-
 export const categoriesController: CategoriesController = new CategoriesController()

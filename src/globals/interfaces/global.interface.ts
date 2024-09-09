@@ -1,17 +1,15 @@
-export interface IFilter {
+﻿export interface IFilter {
   field: string
   condition: 'equals' | 'not' | 'in' | 'notIn' | 'lt' | 'lte' | 'gt' | 'gte' | 'contains' | 'startsWith' | 'endsWith'
   value: number | string
 }
-
 export interface IWhere {
-  [key: string]: string // Key is the field name, and value is the conditions
+  [key: string]: string 
 }
 export interface ISearch {
   fields: ['title', 'shortDescription']
   value: string
 }
-
 export interface PaginatedResult<T> {
   data: T[]
   totalItems: number
@@ -19,7 +17,6 @@ export interface PaginatedResult<T> {
   currentPage: number
   limit: number
 }
-
 export interface GetAllOptions {
   page: number
   limit: number

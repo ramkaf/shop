@@ -1,5 +1,4 @@
-import Joi from 'joi'
-
+﻿import Joi from 'joi'
 const createProductSchema =   Joi.object({
   title: Joi.string().required(),
   longDescription: Joi.string().required(),
@@ -44,5 +43,4 @@ const getAllProductsSchema = Joi.object({
     .optional(),
   searches: Joi.string().optional()
 })
-
 export { createProductSchema, updateProductSchema, getOneProductSchema, getAllProductsSchema }

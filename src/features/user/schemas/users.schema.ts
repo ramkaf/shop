@@ -1,5 +1,4 @@
-import Joi from 'joi'
-
+﻿import Joi from 'joi'
 const usersRegisterSchema = Joi.object({
   email: Joi.string().required().email(),
   password: Joi.string().required(),

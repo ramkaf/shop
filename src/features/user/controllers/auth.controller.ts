@@ -1,9 +1,8 @@
-import { Request, Response, NextFunction } from 'express'
+﻿import { Request, Response, NextFunction } from 'express'
 import { HTTP_STATUS } from '~/globals/constants/http'
 import { BadRequestException } from '~/globals/middlewares/error.middleware'
 import { authService } from '~/services/db/auth.service'
 import { passwordService } from '~/services/db/password.service'
-
 export class AuthController {
   public async register(req: Request, res: Response, next: NextFunction) {
     const { firstName, lastName, username, password, email, avatar } = req.validatedBody
@@ -21,5 +20,4 @@ export class AuthController {
     return res.status(HTTP_STATUS.CREATED).json({ message: 'user logged in successfully ', data })
   }
 }
-
 export const authController: AuthController = new AuthController()

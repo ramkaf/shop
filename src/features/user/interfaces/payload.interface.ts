@@ -1,4 +1,4 @@
-export interface IPayload {
+﻿export interface IPayload {
   id: number
   email: string
   firstName: string

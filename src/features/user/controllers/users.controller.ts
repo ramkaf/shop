@@ -1,4 +1,4 @@
-import { NextFunction, Request, Response } from 'express'
+﻿import { NextFunction, Request, Response } from 'express'
 import { prisma } from '~/prisma'
 import { usersService } from '~/services/db/users.service'
 class UsersController {
