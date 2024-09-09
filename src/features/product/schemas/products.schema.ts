@@ -5,7 +5,8 @@ const createProductSchema =   Joi.object({
   longDescription: Joi.string().required(),
   shortDescription: Joi.string().required(),
   quantity: Joi.number().required(),
-  categoryId: Joi.number().required()
+  categoryId: Joi.number().required(),
+  mainImage : Joi.any().optional(),
 })
 const updateProductSchema = Joi.object({
   dkp: Joi.string().required(),

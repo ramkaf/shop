@@ -8,6 +8,7 @@ import { responseToClient } from './globals/utils/helper'
 import { HTTP_STATUS } from './globals/constants/http'
 import { authMiddleware } from './globals/middlewares/auth.middleware'
 import morgan from 'morgan';
+import path from 'path'
 export class Server {
   private app: Application
 
@@ -22,6 +23,7 @@ export class Server {
   }
   private setupMiddlewares(): void {
     this.app.use(morgan('tiny'))
+    this.app.use('/uploads', express.static(path.join(__dirname, '../../shop-starter/images')));
     this.app.use(express.json())
     this.app.use(authMiddleware)
   }

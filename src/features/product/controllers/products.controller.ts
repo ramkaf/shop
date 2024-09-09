@@ -31,26 +31,40 @@ class ProductsController {
     throw new BadRequestException('فقط یک ای دی به صورت ابجت ارسال کنید')
   }
   public async create(req: Request, res: Response, next: NextFunction) {
-      req.validatedBody.uniqueString = generateUniqueString()
-      req.validatedBody.slug = stringToSlug(req.validatedBody.title)
-      req.validatedBody.currentUser = req.currentUser
-      let result = await productsService.add(req.validatedBody)
+    console.log(req.file);
+    
+    if (!req.file)
+      return res.status(400).send({errorMessages: ["image is required"]})
+      const data = {
+        ...req.body ,
+        quantity : parseInt(req.body.quantity),
+        categoryId : parseInt(req.body.categoryId),
+        mainImage : req.file!.path,
+        uniqueString : generateUniqueString(),
+        slug : stringToSlug(req.validatedBody.title),
+        currentUser : req.currentUser,
+      }
+      
+    let result = await productsService.add(data)
     return responseToClient(res, result, HTTP_STATUS.CREATED)
   }
   public async update(req: Request, res: Response, next: NextFunction) {
-    let results = []
-    if (!Array.isArray(req.validatedBody)) {
       req.validatedBody.slug = stringToSlug(req.validatedBody.title)
-      results.push(await productsService.update(req.validatedBody , req.currentUser as IPayload))
-      return responseToClient(res, results, HTTP_STATUS.OK)
-    }
-    results = await Promise.all(
-      req.validatedBody.map(async (item: any) => {
-        item.slug = stringToSlug(item.title)
-        return await productsService.update(item , req.currentUser as IPayload)
-      })
-    )
-    return responseToClient(res, results)
+      const data = {
+        ...req.body ,
+        quantity : parseInt(req.body.quantity),
+        categoryId : parseInt(req.body.categoryId),
+        mainImage : req.file!.path,
+        uniqueString : generateUniqueString(),
+        slug : stringToSlug(req.validatedBody.title),
+        currentUser : req.currentUser,
+      }
+      if (req.file)
+        data.mainImage = req.file!.path
+      
+      let result = await productsService.update(req.validatedBody , req.currentUser as IPayload)
+      return responseToClient(res, result, HTTP_STATUS.OK)
+    return responseToClient(res, result)
   }
   public async delete(req: Request, res: Response, next: NextFunction) {
     let results = []
