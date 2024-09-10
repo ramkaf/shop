@@ -15,15 +15,14 @@ class ProductVariantsService {
         return productVariant
     }
     public async remove (productVariantSchema:IProductVariantGetOne):Promise<ProductVariant>{
-        const {id} = productVariantSchema
+      try {
         const productVariant : ProductVariant = await prisma.productVariant.delete({
-            where : {
-                id
-            }
+            where : productVariantSchema
         })
-        if (!productVariant)
-            throw new BadRequestException('somethings wrong')
         return productVariant
+      } catch (error) {
+        throw new BadRequestException('no variant belongs to this id')
+      }
     }
     public async findById(id : number){
         const variant = await prisma.productVariant.findFirst({

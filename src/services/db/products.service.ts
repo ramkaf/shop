@@ -15,8 +15,7 @@ class ProductsService {
       mainImage,
       categoryId,
       uniqueString,
-      slug,
-      currentUser
+      slug
     } = productCreate
     const product = await prisma.product.create({
       data: {
@@ -27,8 +26,7 @@ class ProductsService {
         mainImage,
         categoryId,
         uniqueString,
-        slug,
-        userId: currentUser.id
+        slug
       }
     })
     if (!product)
@@ -40,6 +38,13 @@ class ProductsService {
     const product = await prisma.product.findFirst({
       where: {
         uniqueString: dkp
+      },
+      include : {
+        productVariant: {
+          include :{
+            productVariantItems : true
+          }
+        }
       }
     })
     if (!product) throw new BadRequestException('no product found')
@@ -82,6 +87,13 @@ class ProductsService {
       where,
       orderBy: {
         [sortBy]: sortDir
+      },
+      include : {
+        productVariant : {
+          include : {
+            productVariantItems : true
+          }
+        }
       }
     })
     return {
@@ -92,13 +104,10 @@ class ProductsService {
       limit
     }
   }
-  public async update(productUpdate: IProductUpdate , payload:IPayload):Promise<Product> {
+  public async update(productUpdate: IProductUpdate):Promise<Product> {
     try {
-      const {role , id} = payload
       const { dkp, title, longDescription, shortDescription, quantity, mainImage, categoryId, slug } = productUpdate
-      const whereClause = role === 'ADMIN'
-      ? { uniqueString: dkp }
-      : { uniqueString: dkp, userId : id };
+      const whereClause = { uniqueString: dkp}
     const product = await prisma.product.update({
       where: whereClause,
       data: {
@@ -117,13 +126,12 @@ class ProductsService {
       throw new BadRequestException('something goes wrong')
     }
   }
-  public async remove(productGetOne: IProductGetOne , userId:number):Promise<Product> {
+  public async remove(productGetOne: IProductGetOne) {
    try {
     const { dkp } = productGetOne
     const product = await prisma.product.delete({
       where: {
-        uniqueString: dkp ,
-        userId
+        uniqueString: dkp
       }
     })
     return product

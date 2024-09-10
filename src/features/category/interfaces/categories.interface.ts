@@ -3,7 +3,8 @@ export interface ICategoryCreate {
   title: string
   icon: string
   uniqueString: string
-  slug: string
+  slug: string,
+  mainImage : string
 }
 export interface ICategoryGetOne {
   dkp: string

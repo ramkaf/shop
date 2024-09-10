@@ -12,16 +12,16 @@ import {
   updateCategorySchema,
   getAllCategoriesSchema
 } from '../schemas/categories.schema'
-import { isAdmin, isLoggedIn } from '~/globals/middlewares/auth.middleware'
+import { isAdmin } from '~/globals/middlewares/auth.middleware'
 import { upload } from './../../../globals/utils/multer';
 const categoriesRouter = express.Router()
 
-categoriesRouter.use(isLoggedIn)
 const uploadImage = upload("category")
 
 categoriesRouter.get('/', validateBodySchema(getAllCategoriesSchema), categoriesController.getAll)
 categoriesRouter.get('/:dkp', validateParamSchema(getOneCategorySchema), categoriesController.getById)
-categoriesRouter.post('/', uploadImage.single("mainImage"),validateBodySchema(createCategorySchema), categoriesController.create)
-categoriesRouter.put('/', validateBodySchema(updateCategorySchema), categoriesController.update)
-categoriesRouter.delete('/', validateBodySchema(getOneCategorySchema), categoriesController.delete)
+categoriesRouter.post('/',isAdmin , uploadImage.single("mainImage"),validateBodySchema(createCategorySchema), categoriesController.create)
+categoriesRouter.put('/',isAdmin , validateBodySchema(updateCategorySchema), categoriesController.update)
+categoriesRouter.delete('/',isAdmin , validateBodySchema(getOneCategorySchema), categoriesController.delete)
+
 export default categoriesRouter

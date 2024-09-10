@@ -8,7 +8,6 @@ export interface IProductCreate {
   uniqueString: string
   mainImage: string
   categoryId: number
-  currentUser: IPayload
 }
 export interface IProductUpdate {
   dkp: string

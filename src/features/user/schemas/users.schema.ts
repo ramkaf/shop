@@ -4,8 +4,7 @@ const usersRegisterSchema = Joi.object({
   password: Joi.string().required(),
   firstName: Joi.string().required(),
   lastName: Joi.string().required(),
-  username: Joi.string().required(),
-  avatar: Joi.optional()
+  username: Joi.string().required()
 })
 const usersLoginSchema = Joi.object({
   email: Joi.string().required().email(),

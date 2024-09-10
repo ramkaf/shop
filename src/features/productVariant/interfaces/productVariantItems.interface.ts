@@ -1,7 +1,9 @@
 
 export interface IProductVariantItemCreate {
-    productId : number
     variantId : number
     name : string
 }
 
+export interface IProductVariantItemGetOne {
+    id:number
+}

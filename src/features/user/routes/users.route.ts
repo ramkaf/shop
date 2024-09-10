@@ -3,7 +3,13 @@ import 'express-async-errors'
 import { userController } from '../controllers/users.controller'
 import { authMiddleware, isLoggedIn } from '~/globals/middlewares/auth.middleware'
 import 'express-async-errors'
+import { upload } from './../../../globals/utils/multer';
+
 const userRoute = express.Router()
-userRoute.get('/me', authMiddleware, isLoggedIn, userController.getMe)
-userRoute.get('/my-product', authMiddleware, isLoggedIn, userController.readMyProduct)
+userRoute.use(isLoggedIn)
+const uploadImage = upload('user')
+
+userRoute.get('/me', isLoggedIn, userController.getMe)
+userRoute.post('/avatar',uploadImage.single('avatar'), userController.avatar)
+
 export default userRoute

@@ -15,16 +15,9 @@ const updateProductSchema = Joi.object({
   quantity: Joi.number().required(),
   categoryId: Joi.number().required()
 })
-const getOneProductSchema = Joi.alternatives().try(
-  Joi.object({
+const getOneProductSchema = Joi.object({
     dkp: Joi.string().required()
-  }),
-  Joi.array().items(
-    Joi.object({
-      dkp: Joi.string().required()
-    })
-  )
-)
+  })
 const getAllProductsSchema = Joi.object({
   page: Joi.number().integer().optional(),
   limit: Joi.number().integer().optional(),

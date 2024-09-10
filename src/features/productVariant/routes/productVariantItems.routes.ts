@@ -1,16 +1,15 @@
 
 import express from 'express';
-import { validateBodySchema } from '~/globals/middlewares/validate.middleware';
-import { IProductVariantCreate } from '~/features/productVariant/interfaces/productVariants.interface';
+import { validateBodySchema, validateParamSchema } from '~/globals/middlewares/validate.middleware';
 import { createProductVariantItemSchema, getOneProductVariantItemSchema } from '../schemas/productVariantItems.schema';
 import { productVariantItemsController } from '../controllers/productVariantItems.controller';
-import { isLoggedIn } from '~/globals/middlewares/auth.middleware';
+import { isAdmin } from './../../../globals/middlewares/auth.middleware';
 
 const productVariantItemsRouter = express.Router();
-productVariantItemsRouter.use(isLoggedIn)
+productVariantItemsRouter.use(isAdmin)
 
-productVariantItemsRouter.post('/' , validateBodySchema(createProductVariantItemSchema) , productVariantItemsController.create)
-productVariantItemsRouter.delete('/' , validateBodySchema(getOneProductVariantItemSchema) , productVariantItemsController.delete)
+productVariantItemsRouter.post('/' ,validateBodySchema(createProductVariantItemSchema) , productVariantItemsController.create)
+productVariantItemsRouter.delete('/:id'  ,validateParamSchema(getOneProductVariantItemSchema) , productVariantItemsController.delete)
 
 
 export default productVariantItemsRouter;

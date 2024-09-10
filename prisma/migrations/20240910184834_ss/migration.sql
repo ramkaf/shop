@@ -6,7 +6,7 @@ CREATE TABLE `User` (
     `firstName` VARCHAR(191) NOT NULL,
     `lastName` VARCHAR(191) NOT NULL,
     `username` VARCHAR(191) NOT NULL,
-    `avatar` VARCHAR(191) NOT NULL,
+    `avatar` VARCHAR(191) NOT NULL DEFAULT '',
     `role` ENUM('USER', 'ADMIN') NOT NULL DEFAULT 'USER',
     `isActive` BOOLEAN NOT NULL DEFAULT true,
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
@@ -25,7 +25,7 @@ CREATE TABLE `Category` (
     `status` BOOLEAN NOT NULL DEFAULT true,
     `slug` VARCHAR(191) NOT NULL,
     `uniqueString` VARCHAR(191) NOT NULL,
-    `userId` INTEGER NOT NULL,
+    `mainImage` VARCHAR(191) NOT NULL,
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updatedAt` DATETIME(3) NOT NULL,
 
@@ -46,7 +46,6 @@ CREATE TABLE `Product` (
     `slug` VARCHAR(191) NOT NULL,
     `uniqueString` VARCHAR(191) NOT NULL,
     `categoryId` INTEGER NOT NULL,
-    `userId` INTEGER NOT NULL,
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updatedAt` DATETIME(3) NOT NULL,
 
@@ -77,18 +76,13 @@ CREATE TABLE `ProductVariant` (
 CREATE TABLE `ProductVariantItem` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `variantId` INTEGER NOT NULL,
+    `name` VARCHAR(191) NOT NULL,
 
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- AddForeignKey
-ALTER TABLE `Category` ADD CONSTRAINT `Category_userId_fkey` FOREIGN KEY (`userId`) REFERENCES `User`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
 ALTER TABLE `Product` ADD CONSTRAINT `Product_categoryId_fkey` FOREIGN KEY (`categoryId`) REFERENCES `Category`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE `Product` ADD CONSTRAINT `Product_userId_fkey` FOREIGN KEY (`userId`) REFERENCES `User`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `ProductImage` ADD CONSTRAINT `ProductImage_productId_fkey` FOREIGN KEY (`productId`) REFERENCES `Product`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;

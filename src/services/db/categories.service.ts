@@ -6,19 +6,9 @@ import { IWhere } from '~/globals/interfaces/global.interface'
 import { BadRequestException } from '~/globals/middlewares/error.middleware'
 import { IPayload } from '~/features/user/interfaces/payload.interface'
 class CategoriesService {
-  public async add(body: ICategoryCreate , payload:IPayload): Promise<Category> {
-    const { title, icon, slug, uniqueString} = body
-    const {id} = payload
-
+  public async add(categoryCreate: ICategoryCreate): Promise<Category> {
     const category: Category = await prisma.category.create({
-      data: {
-        title,
-        icon,
-        status: true,
-        slug,
-        uniqueString,
-        userId : id
-      }
+      data: categoryCreate
     })
     return category
   }
@@ -52,6 +42,15 @@ class CategoriesService {
       limit
     }
   }
+  public async findById(id : number) {
+    const category = await prisma.category.findFirst({
+      where: {
+        id
+      }
+    })
+    if (!category) throw new BadRequestException('no category found')
+    return category
+  }
   public async readOne(param: ICategoryGetOne): Promise<Category | null> {
     const { dkp } = param
     const category = await prisma.category.findFirst({
@@ -67,10 +66,7 @@ class CategoriesService {
     const { dkp, title, icon } = body
     const category = await prisma.category.update({
       where: { uniqueString: dkp },
-      data: { title, icon },
-      include : {
-        user : true
-      }
+      data: { title, icon }
     })
     if (!category) throw new BadRequestException('no category found')
     return category
@@ -80,9 +76,6 @@ class CategoriesService {
     const category = await prisma.category.delete({
       where: {
         uniqueString: dkp
-      },
-      include : {
-        user:true
       }
     })
     if (!category) throw new BadRequestException('no category found')

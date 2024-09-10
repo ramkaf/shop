@@ -4,14 +4,12 @@ import { productVariantsController } from '../controllers/productVariants.contro
 import { isLoggedIn } from '~/globals/middlewares/auth.middleware';
 import { validateBodySchema, validateParamSchema } from './../../../globals/middlewares/validate.middleware';
 import { createProductVariantSchema, getOneProductVariantSchema } from '../schemas/productVariants.schema';
+import { isAdmin } from './../../../globals/middlewares/auth.middleware';
 
 const productVariantsRouter = express.Router();
 productVariantsRouter.use(isLoggedIn)
 
-productVariantsRouter.get('/', productVariantsController.getAll);
-productVariantsRouter.get('/:id', productVariantsController.getById);
-productVariantsRouter.post('/', validateBodySchema(createProductVariantSchema),productVariantsController.create);
-productVariantsRouter.put('/:id', productVariantsController.update);
-productVariantsRouter.delete('/:id/:productId', validateParamSchema(getOneProductVariantSchema),productVariantsController.delete);
+productVariantsRouter.post('/', isAdmin , validateBodySchema(createProductVariantSchema),productVariantsController.create);
+productVariantsRouter.delete('/:id', isAdmin , validateParamSchema(getOneProductVariantSchema),productVariantsController.delete);
 
 export default productVariantsRouter;

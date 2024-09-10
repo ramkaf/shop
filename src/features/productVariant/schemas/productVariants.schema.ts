@@ -7,8 +7,7 @@ const createProductVariantSchema = Joi.object({
 });
 
 const getOneProductVariantSchema = Joi.object({
-    id : Joi.number().required(),
-    productId : Joi.number().required()
+    id : Joi.number().required()
 });
 
 export { createProductVariantSchema, getOneProductVariantSchema };

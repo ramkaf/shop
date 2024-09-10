@@ -31,13 +31,14 @@ class CategoriesController {
   public async create(req: Request, res: Response, next: NextFunction) {
       if (!req.file)
         return res.status(400).send({errorMessages: ["image is required"]})
-
       const categorySchema = {
         ...req.body,
         slug : stringToSlug(req.validatedBody.title),
-        uniqueString : generateUniqueString()
+        uniqueString : generateUniqueString(),
+        mainImage:req.file.path.replace(/\\/g, '/')
+
       }
-      let result = await categoriesService.add(categorySchema , req.currentUser as IPayload)
+      let result = await categoriesService.add(categorySchema)
       return responseToClient(res, result, HTTP_STATUS.CREATED)
   }
   public async update(req: Request, res: Response, next: NextFunction) {
