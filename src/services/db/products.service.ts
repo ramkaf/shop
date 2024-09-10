@@ -6,7 +6,7 @@ import { BadRequestException, NotFoundException } from '~/globals/middlewares/er
 import { prisma } from '~/prisma'
 import { IPayload } from '~/features/user/interfaces/payload.interface'
 class ProductsService {
-  public async add(productCreate: IProductCreate) {
+  public async add(productCreate: IProductCreate):Promise<Product> {
     const {
       title,
       longDescription,
@@ -31,6 +31,8 @@ class ProductsService {
         userId: currentUser.id
       }
     })
+    if (!product)
+      throw new BadRequestException('invalid credential')
     return product
   }
   public async readOne(productGetOne: IProductGetOne) {
@@ -38,6 +40,15 @@ class ProductsService {
     const product = await prisma.product.findFirst({
       where: {
         uniqueString: dkp
+      }
+    })
+    if (!product) throw new BadRequestException('no product found')
+    return product
+  }
+  public async findById(id : number) {
+    const product = await prisma.product.findFirst({
+      where: {
+        id
       }
     })
     if (!product) throw new BadRequestException('no product found')
@@ -81,7 +92,7 @@ class ProductsService {
       limit
     }
   }
-  public async update(productUpdate: IProductUpdate , payload:IPayload) {
+  public async update(productUpdate: IProductUpdate , payload:IPayload):Promise<Product> {
     try {
       const {role , id} = payload
       const { dkp, title, longDescription, shortDescription, quantity, mainImage, categoryId, slug } = productUpdate
@@ -106,7 +117,7 @@ class ProductsService {
       throw new BadRequestException('something goes wrong')
     }
   }
-  public async remove(productGetOne: IProductGetOne , userId:number) {
+  public async remove(productGetOne: IProductGetOne , userId:number):Promise<Product> {
    try {
     const { dkp } = productGetOne
     const product = await prisma.product.delete({

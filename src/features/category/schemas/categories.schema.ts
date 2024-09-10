@@ -1,7 +1,8 @@
 ﻿import Joi from 'joi'
 const createCategorySchema = Joi.object({
   title: Joi.string().required(),
-  icon: Joi.string().required()
+  icon: Joi.string().required(),
+  mainImage: Joi.any().optional()
 })
 const updateCategorySchema =Joi.object({
   dkp: Joi.string().required(),

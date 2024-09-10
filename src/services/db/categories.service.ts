@@ -4,9 +4,12 @@ import { prisma } from '~/prisma'
 import { PaginatedResult, GetAllOptions } from '../../globals/interfaces/global.interface'
 import { IWhere } from '~/globals/interfaces/global.interface'
 import { BadRequestException } from '~/globals/middlewares/error.middleware'
+import { IPayload } from '~/features/user/interfaces/payload.interface'
 class CategoriesService {
-  public async add(body: ICategoryCreate): Promise<Category> {
-    const { title, icon, slug, uniqueString , currentUser} = body
+  public async add(body: ICategoryCreate , payload:IPayload): Promise<Category> {
+    const { title, icon, slug, uniqueString} = body
+    const {id} = payload
+
     const category: Category = await prisma.category.create({
       data: {
         title,
@@ -14,7 +17,7 @@ class CategoriesService {
         status: true,
         slug,
         uniqueString,
-        userId : currentUser.id
+        userId : id
       }
     })
     return category
@@ -64,7 +67,10 @@ class CategoriesService {
     const { dkp, title, icon } = body
     const category = await prisma.category.update({
       where: { uniqueString: dkp },
-      data: { title, icon }
+      data: { title, icon },
+      include : {
+        user : true
+      }
     })
     if (!category) throw new BadRequestException('no category found')
     return category
@@ -74,6 +80,9 @@ class CategoriesService {
     const category = await prisma.category.delete({
       where: {
         uniqueString: dkp
+      },
+      include : {
+        user:true
       }
     })
     if (!category) throw new BadRequestException('no category found')

@@ -1,8 +1,6 @@
 ﻿import { NextFunction, Request, Response } from 'express'
 import { Schema, ValidationError, ValidationErrorItem } from 'joi'
-import { IPayload } from '~/features/user/interfaces/payload.interface'
-import { responseToClient } from '~/globals/utils/helper'
-import { HTTP_STATUS } from '../constants/http'
+
 const formatJoiMessage = (joiMessages: ValidationErrorItem[]) => {
   return joiMessages.map((msgObj) => msgObj.message.replace(/"/g, ''))
 }

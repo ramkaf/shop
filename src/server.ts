@@ -25,6 +25,10 @@ export class Server {
     this.app.use('/uploads', express.static(path.join(__dirname, '../../shop-starter/images')));
     this.app.use(express.json())
     this.app.use(authMiddleware)
+    this.app.use((req, res, next) => {
+      res.setHeader('Content-Type', 'application/json; charset=utf-8');
+      next();
+    });
   }
   private setupRoutes(): void {
     appRoutes(this.app)
@@ -38,7 +42,7 @@ export class Server {
         return res.status(err.statusCode).json(err.getResponseError())
       }
       console.error(err.stack) 
-      return responseToClient(res, '', HTTP_STATUS.INTERVAL_SERVER_ERROR, 'Ø§Ø±ÙˆØ±ÛŒ Ø§ØªÙØ§Ù‚ Ø§ÙØªØ§Ø¯')
+      return responseToClient(res, '', HTTP_STATUS.INTERVAL_SERVER_ERROR, 'Internal Server Error')
     })
   }
   public startServer(): void {

@@ -7,6 +7,7 @@ import { UtilsConstants } from '~/globals/constants/utils.constants'
 import { Category } from '@prisma/client'
 import { ICategoryCreate, ICategoryGetOne } from '../interfaces/categories.interface'
 import { BadRequestException } from '~/globals/middlewares/error.middleware'
+import { IPayload } from '~/features/user/interfaces/payload.interface'
 class CategoriesController {
   public async getAll(req: Request, res: Response, next: NextFunction) {
     const {
@@ -28,14 +29,18 @@ class CategoriesController {
     throw new BadRequestException('ÙÙ‚Ø· ÛŒÚ© Ø§ÛŒ Ø¯ÛŒ Ø¨Ù‡ ØµÙˆØ±Øª Ø§Ø¨Ø¬Øª Ø§Ø±Ø³Ø§Ù„ Ú©Ù†ÛŒØ¯')
   }
   public async create(req: Request, res: Response, next: NextFunction) {
-      req.validatedBody.slug = stringToSlug(req.validatedBody.title)
-      req.validatedBody.uniqueString = generateUniqueString()
-      req.validatedBody.currentUser = req.currentUser
-      let result = await categoriesService.add(req.validatedBody)
+      if (!req.file)
+        return res.status(400).send({errorMessages: ["image is required"]})
+
+      const categorySchema = {
+        ...req.body,
+        slug : stringToSlug(req.validatedBody.title),
+        uniqueString : generateUniqueString()
+      }
+      let result = await categoriesService.add(categorySchema , req.currentUser as IPayload)
       return responseToClient(res, result, HTTP_STATUS.CREATED)
   }
   public async update(req: Request, res: Response, next: NextFunction) {
-    console.log(req.currentUser);
       req.validatedBody.slug = stringToSlug(req.validatedBody.title)
       let results =  await categoriesService.update(req.validatedBody)
       return responseToClient(res, results)

@@ -53,6 +53,7 @@ model Product {
   quantity        Int      @default(0)
   mainImage       String
   productImage ProductImage[]
+  productVariant ProductVariant[]
   slug String @unique 
   uniqueString String @unique 
   categoryId      Int   
@@ -68,4 +69,19 @@ model ProductImage {
   image     String
   product   Product  @relation(fields: [productId], references: [id])
   productId Int
+}
+
+model ProductVariant {
+  id Int @id @default(autoincrement())
+  name String
+  productVariant Product @relation(fields: [productId], references: [id] , onDelete: Cascade)
+  productVariantItems ProductVariantItem[]
+  productId Int
+}
+
+model ProductVariantItem {
+  id Int @id @default(autoincrement())
+  productVariant ProductVariant @relation(fields: [variantId] , references: [id] , onDelete: Cascade)
+  variantId Int
+  name String
 }

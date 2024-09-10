@@ -1,11 +1,13 @@
 ﻿import { Response } from 'express'
 import { IFilter, ISearch } from '../interfaces/global.interface'
 import { any, string } from 'joi'
+import { IPayload } from '~/features/user/interfaces/payload.interface'
+import { ForbiddenException } from '../middlewares/error.middleware'
 export function responseToClient(
   res: Response,
   data: any,
   statusCode: number = 200,
-  message: string = 'Ø¹Ù…Ù„ÛŒØ§Øª Ø¨Ø§ Ù…ÙˆÙÙ‚ÛŒØª Ø§Ù†Ø¬Ø§Ù… Ø´Ø¯'
+  message: string = 'عملیات با موفقیت انجام شد'
 ) {
   return res.status(statusCode).json({
     message,
@@ -82,4 +84,11 @@ export function generateWhereCategory(filters: IFilter[], searches: ISearch[]): 
     ]
   }
   return where
+}
+
+export function checkUserPermission(model:any , payload:IPayload){
+  const {id} = payload
+  const {userId} = model
+  if (id !== userId)
+    throw new ForbiddenException("forbidden")
 }

@@ -4,7 +4,6 @@ export interface ICategoryCreate {
   icon: string
   uniqueString: string
   slug: string
-  currentUser : IPayload
 }
 export interface ICategoryGetOne {
   dkp: string
