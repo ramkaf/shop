@@ -1,7 +1,8 @@
 ﻿import { NextFunction, Request, Response } from 'express'
 import { prisma } from '~/prisma'
 import { usersService } from '~/services/db/users.service';
-import { IAvatar } from '../interfaces/auth.interface';
+import {IUserUpdate } from '../interfaces/user.interface';
+import { responseToClient } from '~/globals/utils/helper';
 class UsersController {
   
   public async createUser(req: Request, res: Response, next: NextFunction) {
@@ -24,11 +25,24 @@ class UsersController {
     return req.currentUser
   }
 
-  public async avatar(req:Request , res:Response , next:NextFunction){
-    if (!req.file)
-      return res.status(400).send({errorMessages: ["image is required"]})
-    const userSchema = {path : req.file.path , payload:req.currentUser}
-    const result = await usersService.avatar(userSchema as IAvatar)
+  public async update(req:Request , res:Response , next:NextFunction){
+    const userSchema = {...req.validatedBody , payload:req.currentUser}
+    if (req.file)
+      userSchema.path = req.file.path.replace(/\\/g, '/')
+    const user = await usersService.edit(userSchema as IUserUpdate)
+    return responseToClient(res , user)
+  }
+  public async delete(req:Request , res:Response , next:NextFunction){
+    const {id} = req.currentUser!
+    const user = await usersService.diActive(id)
+    return responseToClient(res , user)
+  }
+
+  public async updatePassword(req:Request , res:Response , next:NextFunction){
+    const {password} = req.validatedBody
+    const {id} = req.currentUser!
+    const user = await usersService.updatePassword({password , id})
+    return responseToClient(res , user)
   }
 
 }

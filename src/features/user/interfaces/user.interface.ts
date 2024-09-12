@@ -5,7 +5,6 @@ export interface IAuthRegister {
   firstName: string
   lastName: string
   username: string
-  avatar: string
   password: string
 }
 export interface IAuthLogin {
@@ -13,7 +12,21 @@ export interface IAuthLogin {
   password: string
 }
 
-export interface IAvatar {
-  path : string
+export interface IUserUpdate {
+  path? : string
   payload : IPayload
+  firstName? : string
+  lastName? :string
+}
+
+export interface IGetUser {
+  email? : string
+  username? :string
+  id? : number
+}
+
+
+export interface IUpdatePassword {
+  id : number ,
+  password : string
 }

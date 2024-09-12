@@ -22,7 +22,7 @@ export class Server {
   }
   private setupMiddlewares(): void {
     this.app.use(morgan('tiny'))
-    this.app.use('/uploads', express.static(path.join(__dirname, '../../shop-starter/images')));
+    this.app.use('/images', express.static(path.join(__dirname, '../../shop-starter/public')));
     this.app.use(express.json())
     this.app.use(authMiddleware)
     this.app.use((req, res, next) => {
