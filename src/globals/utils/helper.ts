@@ -1,7 +1,7 @@
 ﻿import { Response } from 'express'
 import { IFilter, ISearch } from '../interfaces/global.interface'
 import { any, string } from 'joi'
-import { IPayload } from '~/features/user/interfaces/payload.interface'
+import { IPayload } from '~/features/user/interfaces/user.interface'
 import { ForbiddenException } from '../middlewares/error.middleware'
 export function responseToClient(
   res: Response,
@@ -22,19 +22,19 @@ export function getDefaultPaginationOptions() {
 }
 export function generateUniqueString() {
   const prefix = 'dkp-'
-  const timestamp = Date.now() 
-  const randomNum = Math.floor(Math.random() * 1000000) 
-  const uniqueNumber = (timestamp + randomNum).toString().slice(-10) 
+  const timestamp = Date.now()
+  const randomNum = Math.floor(Math.random() * 1000000)
+  const uniqueNumber = (timestamp + randomNum).toString().slice(-10)
   return prefix + uniqueNumber
 }
 export function stringToSlug(str: string) {
   return str
-    .toLowerCase() 
-    .trim() 
-    .replace(/[^a-z0-9\u0600-\u06FF\s-]/g, '') 
-    .replace(/\s+/g, '-') 
+    .toLowerCase()
+    .trim()
+    .replace(/[^a-z0-9\u0600-\u06FF\s-]/g, '')
+    .replace(/\s+/g, '-')
     .replace(/-+/g, '-')
-    .concat(Math.floor(Math.random()*1000).toString()) 
+    .concat(Math.floor(Math.random() * 1000).toString())
 }
 export function generateWhereProduct(filters: IFilter[], searches: ISearch[]): Record<string, any> {
   const where: Record<string, any> = {}
@@ -86,9 +86,8 @@ export function generateWhereCategory(filters: IFilter[], searches: ISearch[]): 
   return where
 }
 
-export function checkUserPermission(model:any , payload:IPayload){
-  const {id} = payload
-  const {userId} = model
-  if (id !== userId)
-    throw new ForbiddenException("forbidden")
+export function checkUserPermission(model: any, payload: IPayload) {
+  const { id } = payload
+  const { userId } = model
+  if (id !== userId) throw new ForbiddenException('forbidden')
 }

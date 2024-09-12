@@ -6,6 +6,8 @@ import productsRouter from '~/features/product/routes/products.routes'
 import productVariantsRouter from '~/features/productVariant/routes/productVariants.routes'
 import productVariantItemsRouter from '~/features/productVariant/routes/productVariantItems.routes'
 import wishListsRouter from '~/features/wishList/routes/wishLists.routes'
+import addressesRouter from '~/features/address/routes/addresses.routes'
+
 const appRoutes = (app: Application) => {
   app.use('/api/v1/users', userRoute)
   app.use('/api/v1/auth', authRoute)
@@ -14,5 +16,6 @@ const appRoutes = (app: Application) => {
   app.use('/api/v1/product-variants', productVariantsRouter)
   app.use('/api/v1/product-variant-items', productVariantItemsRouter)
   app.use('/api/v1/wishlist', wishListsRouter)
+  app.use('/api/v1/address', addressesRouter)
 }
 export default appRoutes

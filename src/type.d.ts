@@ -5,7 +5,7 @@ declare global {
       validatedBody?: any
       validatedParams?: any
       validatedQueries?: any
-      currentUser?: IPayload 
+      currentUser?: IPayload
     }
   }
 }

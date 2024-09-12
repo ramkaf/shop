@@ -1,11 +1,11 @@
 ﻿import Joi from 'joi'
-const createProductSchema =   Joi.object({
+const createProductSchema = Joi.object({
   title: Joi.string().required(),
   longDescription: Joi.string().required(),
   shortDescription: Joi.string().required(),
   quantity: Joi.number().required(),
   categoryId: Joi.number().required(),
-  mainImage : Joi.any().optional(),
+  mainImage: Joi.any().optional()
 })
 const updateProductSchema = Joi.object({
   dkp: Joi.string().required(),
@@ -16,8 +16,8 @@ const updateProductSchema = Joi.object({
   categoryId: Joi.number().required()
 })
 const getOneProductSchema = Joi.object({
-    dkp: Joi.string().required()
-  })
+  dkp: Joi.string().required()
+})
 const getAllProductsSchema = Joi.object({
   page: Joi.number().integer().optional(),
   limit: Joi.number().integer().optional(),

@@ -1,11 +1,13 @@
 ﻿import { User } from '@prisma/client'
 import 'express-async-errors'
 import jwt from 'jsonwebtoken'
-import { IPayload } from '~/features/user/interfaces/payload.interface'
+import { IPayload } from '~/features/user/interfaces/user.interface'
 class JwtService {
   public async generateAccessToken(user: User): Promise<string> {
     const { id, firstName, lastName, email, role } = user
-    const accessToken: string = jwt.sign({ id, firstName, lastName, email, role }, process.env.ACCESS_TOKEN!, { expiresIn: '1d' })
+    const accessToken: string = jwt.sign({ id, firstName, lastName, email, role }, process.env.ACCESS_TOKEN!, {
+      expiresIn: '1d'
+    })
     return accessToken
   }
   public async verifyAccessToken(token: string): Promise<any> {

@@ -1,19 +1,22 @@
-﻿import { IPayload } from "~/features/user/interfaces/payload.interface"
-export interface ICategoryCreate {
+﻿export interface ICategoryBase {
   title: string
   icon: string
-  uniqueString: string
-  slug: string,
-  mainImage : string
 }
+
+export interface ICategoryCreate extends ICategoryBase {
+  uniqueString: string
+  slug: string
+  mainImage: string
+}
+
 export interface ICategoryGetOne {
   dkp: string
 }
-export interface ICategoryUpdate {
+
+export interface ICategoryUpdate extends Partial<ICategoryBase> {
   dkp: string
-  title: string
-  icon: string
 }
+
 export interface ICategoryGetAll {
   page?: number
   limit?: number

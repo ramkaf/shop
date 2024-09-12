@@ -26,6 +26,7 @@ model User {
   role Role @default(USER)
   isActive Boolean @default(true)
   wishList Wishlist[]
+  address Address []
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
@@ -93,4 +94,18 @@ model Wishlist {
   product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
 
   @@unique([userId, productId]) // Ensure each user-product combination is unique
+}
+
+
+model Address {
+  id Int @id @default(autoincrement())
+  country String 
+  province String
+  city String
+  address String
+  postalCode Int
+  unit Int
+
+  user      User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId Int
 }

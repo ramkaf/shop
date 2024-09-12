@@ -1,14 +1,13 @@
-
 export interface IWishListCreate {
-    userId : number,
-    productId : number,
+  userId: number
+  productId: number
 }
 
-export interface IWishListGetOne{
-    id : number
+export interface IWishListGetOne {
+  id: number
 }
 
-export interface IWishDelete{
-    id : number,
-    userId : number
+export interface IWishDelete {
+  id: number
+  userId: number
 }

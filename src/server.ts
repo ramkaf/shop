@@ -7,7 +7,7 @@ import { CustomError, errorHandler, NotFoundException } from './globals/middlewa
 import { responseToClient } from './globals/utils/helper'
 import { HTTP_STATUS } from './globals/constants/http'
 import { authMiddleware } from './globals/middlewares/auth.middleware'
-import morgan from 'morgan';
+import morgan from 'morgan'
 import path from 'path'
 export class Server {
   private app: Application
@@ -22,13 +22,13 @@ export class Server {
   }
   private setupMiddlewares(): void {
     this.app.use(morgan('tiny'))
-    this.app.use('/images', express.static(path.join(__dirname, '../../shop-starter/public')));
+    this.app.use('/images', express.static(path.join(__dirname, '../../shop-starter/public')))
     this.app.use(express.json())
     this.app.use(authMiddleware)
     this.app.use((req, res, next) => {
-      res.setHeader('Content-Type', 'application/json; charset=utf-8');
-      next();
-    });
+      res.setHeader('Content-Type', 'application/json; charset=utf-8')
+      next()
+    })
   }
   private setupRoutes(): void {
     appRoutes(this.app)
@@ -41,7 +41,7 @@ export class Server {
       if (err instanceof CustomError) {
         return res.status(err.statusCode).json(err.getResponseError())
       }
-      console.error(err.stack) 
+      console.error(err.stack)
       return responseToClient(res, '', HTTP_STATUS.INTERVAL_SERVER_ERROR, 'Internal Server Error')
     })
   }

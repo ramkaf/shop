@@ -59,7 +59,7 @@ export function asyncWrapper(callback: any): RequestHandler {
   }
 }
 export const errorHandler = (err: any, req: Request, res: Response, next: NextFunction) => {
-  console.error(err) 
+  console.error(err)
   res.status(err.status || HTTP_STATUS.INTERVAL_SERVER_ERROR).json({
     message: err.message || 'Internal Server Error'
   })

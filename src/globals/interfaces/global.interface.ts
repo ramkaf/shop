@@ -4,7 +4,7 @@
   value: number | string
 }
 export interface IWhere {
-  [key: string]: string 
+  [key: string]: string
 }
 export interface ISearch {
   fields: ['title', 'shortDescription']

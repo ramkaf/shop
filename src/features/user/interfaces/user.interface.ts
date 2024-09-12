@@ -1,6 +1,4 @@
-﻿import { IPayload } from "./payload.interface"
-
-export interface IAuthRegister {
+﻿export interface IAuthRegister {
   email: string
   firstName: string
   lastName: string
@@ -13,20 +11,27 @@ export interface IAuthLogin {
 }
 
 export interface IUserUpdate {
-  path? : string
-  payload : IPayload
-  firstName? : string
-  lastName? :string
+  path?: string
+  payload: IPayload
+  firstName?: string
+  lastName?: string
 }
 
 export interface IGetUser {
-  email? : string
-  username? :string
-  id? : number
+  email?: string
+  username?: string
+  id?: number
 }
 
-
 export interface IUpdatePassword {
-  id : number ,
-  password : string
+  id: number
+  password: string
+}
+
+export interface IPayload {
+  id: number
+  email: string
+  firstName: string
+  lastName: string
+  role: string
 }

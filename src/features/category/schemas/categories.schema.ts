@@ -4,7 +4,7 @@ const createCategorySchema = Joi.object({
   icon: Joi.string().required(),
   mainImage: Joi.any().optional()
 })
-const updateCategorySchema =Joi.object({
+const updateCategorySchema = Joi.object({
   dkp: Joi.string().required(),
   title: Joi.string().required(),
   icon: Joi.string().required()

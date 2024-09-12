@@ -6,17 +6,9 @@ import { BadRequestException, NotFoundException } from '~/globals/middlewares/er
 import { prisma } from '~/prisma'
 
 class ProductsService {
-  public async add(productCreate: IProductCreate):Promise<Product> {
-    const {
-      title,
-      longDescription,
-      shortDescription,
-      quantity,
-      mainImage,
-      categoryId,
-      uniqueString,
-      slug
-    } = productCreate
+  public async add(productCreate: IProductCreate): Promise<Product> {
+    const { title, longDescription, shortDescription, quantity, mainImage, categoryId, uniqueString, slug } =
+      productCreate
     const product = await prisma.product.create({
       data: {
         title,
@@ -29,8 +21,7 @@ class ProductsService {
         slug
       }
     })
-    if (!product)
-      throw new BadRequestException('invalid credential')
+    if (!product) throw new BadRequestException('invalid credential')
     return product
   }
   public async readOne(productGetOne: IProductGetOne) {
@@ -39,10 +30,10 @@ class ProductsService {
       where: {
         uniqueString: dkp
       },
-      include : {
+      include: {
         productVariant: {
-          include :{
-            productVariantItems : true
+          include: {
+            productVariantItems: true
           }
         }
       }
@@ -50,7 +41,7 @@ class ProductsService {
     if (!product) throw new BadRequestException('no product found')
     return product
   }
-  public async findById(id : number) {
+  public async findById(id: number) {
     const product = await prisma.product.findFirst({
       where: {
         id
@@ -88,10 +79,10 @@ class ProductsService {
       orderBy: {
         [sortBy]: sortDir
       },
-      include : {
-        productVariant : {
-          include : {
-            productVariantItems : true
+      include: {
+        productVariant: {
+          include: {
+            productVariantItems: true
           }
         }
       }
@@ -104,41 +95,40 @@ class ProductsService {
       limit
     }
   }
-  public async update(productUpdate: IProductUpdate):Promise<Product> {
+  public async update(productUpdate: IProductUpdate): Promise<Product> {
     try {
       const { dkp, title, longDescription, shortDescription, quantity, mainImage, categoryId, slug } = productUpdate
-      const whereClause = { uniqueString: dkp}
-    const product = await prisma.product.update({
-      where: whereClause,
-      data: {
-        title,
-        longDescription,
-        shortDescription,
-        quantity,
-        slug,
-        mainImage,
-        categoryId
-      }
-    })
-    return product
+      const whereClause = { uniqueString: dkp }
+      const product = await prisma.product.update({
+        where: whereClause,
+        data: {
+          title,
+          longDescription,
+          shortDescription,
+          quantity,
+          slug,
+          mainImage,
+          categoryId
+        }
+      })
+      return product
     } catch (error) {
-      console.log(error);
+      console.log(error)
       throw new BadRequestException('something goes wrong')
     }
   }
   public async remove(productGetOne: IProductGetOne) {
-   try {
-    const { dkp } = productGetOne
-    const product = await prisma.product.delete({
-      where: {
-        uniqueString: dkp
-      }
-    })
-    return product
-  }
-   catch (error) {
-    throw new BadRequestException('something goes wrong') 
-   }
+    try {
+      const { dkp } = productGetOne
+      const product = await prisma.product.delete({
+        where: {
+          uniqueString: dkp
+        }
+      })
+      return product
+    } catch (error) {
+      throw new BadRequestException('something goes wrong')
+    }
   }
 }
 export const productsService: ProductsService = new ProductsService()

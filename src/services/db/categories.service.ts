@@ -4,7 +4,7 @@ import { prisma } from '~/prisma'
 import { PaginatedResult, GetAllOptions } from '../../globals/interfaces/global.interface'
 import { IWhere } from '~/globals/interfaces/global.interface'
 import { BadRequestException } from '~/globals/middlewares/error.middleware'
-import { IPayload } from '~/features/user/interfaces/payload.interface'
+import { IPayload } from '~/features/user/interfaces/user.interface'
 class CategoriesService {
   public async add(categoryCreate: ICategoryCreate): Promise<Category> {
     const category: Category = await prisma.category.create({
@@ -42,7 +42,7 @@ class CategoriesService {
       limit
     }
   }
-  public async findById(id : number) {
+  public async findById(id: number) {
     const category = await prisma.category.findFirst({
       where: {
         id

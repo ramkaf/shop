@@ -1,5 +1,6 @@
-﻿import { IPayload } from '../../user/interfaces/payload.interface'
-export interface IProductCreate {
+﻿import { IPayload } from '../../user/interfaces/user.interface'
+
+export interface IProductBase {
   title: string
   longDescription: string
   shortDescription: string
@@ -9,15 +10,9 @@ export interface IProductCreate {
   mainImage: string
   categoryId: number
 }
-export interface IProductUpdate {
+export interface IProductCreate extends IProductBase {}
+export interface IProductUpdate extends IProductBase {
   dkp: string
-  title: string
-  longDescription: string
-  shortDescription: string
-  slug: string
-  quantity: number
-  mainImage: string
-  categoryId: number
 }
 export interface IProductGetOne {
   dkp: string
