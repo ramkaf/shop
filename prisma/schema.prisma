@@ -25,6 +25,7 @@ model User {
   avatar String @default("")
   role Role @default(USER)
   isActive Boolean @default(true)
+  wishList Wishlist[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
@@ -51,6 +52,7 @@ model Product {
   mainImage       String
   productImage ProductImage[]
   productVariant ProductVariant[]
+  wishList Wishlist[]
   slug String @unique 
   uniqueString String @unique 
   categoryId      Int   
@@ -79,4 +81,16 @@ model ProductVariantItem {
   productVariant ProductVariant @relation(fields: [variantId] , references: [id] , onDelete: Cascade)
   variantId Int
   name String
+}
+
+model Wishlist {
+  id        Int      @id @default(autoincrement()) // Auto-increment ID
+  userId    Int
+  productId Int
+  createdAt DateTime @default(now())
+
+  user      User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, productId]) // Ensure each user-product combination is unique
 }

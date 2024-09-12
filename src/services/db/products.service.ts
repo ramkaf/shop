@@ -4,7 +4,7 @@ import { IWhere } from '~/globals/interfaces/global.interface'
 import { GetAllOptions, PaginatedResult } from '~/globals/interfaces/global.interface'
 import { BadRequestException, NotFoundException } from '~/globals/middlewares/error.middleware'
 import { prisma } from '~/prisma'
-import { IPayload } from '~/features/user/interfaces/payload.interface'
+
 class ProductsService {
   public async add(productCreate: IProductCreate):Promise<Product> {
     const {
