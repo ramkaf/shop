@@ -1,7 +1,7 @@
 import express from 'express'
 import { isAdmin, isLoggedIn } from '~/globals/middlewares/auth.middleware'
 import { validateBodySchema, validateParamSchema } from '~/globals/middlewares/validate.middleware'
-import { createVariantItemSchema, createVariantSchema, getOneVariantItemSchema, getOneVariantSchema } from '../schemas/Variants.schema'
+import { createVariantItemSchema, createVariantSchema, getOneVariantItemSchema, getOneVariantSchema } from '../schemas/variants.schema'
 import { variantsController } from '../controllers/variants.controller'
 
 
