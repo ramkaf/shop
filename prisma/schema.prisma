@@ -52,7 +52,7 @@ model Product {
   quantity        Int      @default(0)
   mainImage       String
   productImage ProductImage[]
-  productVariant ProductVariant[]
+  Variant Variant[]
   wishList Wishlist[]
   slug String @unique 
   uniqueString String @unique 
@@ -69,19 +69,20 @@ model ProductImage {
   productId Int
 }
 
-model ProductVariant {
+model Variant {
   id Int @id @default(autoincrement())
   name String
-  productVariant Product @relation(fields: [productId], references: [id] , onDelete: Cascade)
-  productVariantItems ProductVariantItem[]
+  product Product @relation(fields: [productId], references: [id] , onDelete: Cascade)
+  VariantItems VariantItem[]
   productId Int
 }
-
-model ProductVariantItem {
+model VariantItem {
   id Int @id @default(autoincrement())
-  productVariant ProductVariant @relation(fields: [variantId] , references: [id] , onDelete: Cascade)
+  Variant Variant @relation(fields: [variantId] , references: [id] , onDelete: Cascade)
   variantId Int
   name String
+  quantity Int
+  price Float
 }
 
 model Wishlist {
@@ -103,8 +104,8 @@ model Address {
   province String
   city String
   address String
-  postalCode Int
-  unit Int
+  postalCode String
+  unit String
 
   user      User    @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId Int

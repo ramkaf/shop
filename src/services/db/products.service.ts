@@ -33,7 +33,7 @@ class ProductsService {
       include: {
         productVariant: {
           include: {
-            productVariantItems: true
+            VariantItems: true
           }
         }
       }
@@ -82,7 +82,7 @@ class ProductsService {
       include: {
         productVariant: {
           include: {
-            productVariantItems: true
+            VariantItems: true
           }
         }
       }
