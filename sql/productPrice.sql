@@ -1,41 +1,45 @@
--- Trigger to update the product price after a new variantitem is inserted
-CREATE TRIGGER after_variantitem_insert
+DELIMITER $$
+CREATE TRIGGER trg_variantitem_insert_update_product_price
 AFTER INSERT ON variantitem
 FOR EACH ROW
 BEGIN
-    -- Update the product price to the minimum price of variantitems with quantity > 0
-    UPDATE product
-    SET price = (
-        SELECT MIN(price)
-        FROM variantitem
-        JOIN variant ON variant.id = variantitem.variantId
-        WHERE variant.productId = product.id AND variantitem.quantity > 0
+    UPDATE product p
+    JOIN variant v ON v.productId = p.id
+    SET p.price = (
+        SELECT IFNULL(MIN(vi.price), 0)
+        FROM variantitem vi
+        WHERE vi.variantId = v.id AND vi.quantity > 0
     )
-    WHERE id = (
-        SELECT variant.productId
-        FROM variantitem
-        JOIN variant ON variant.id = variantitem.variantId
-        WHERE variantitem.id = NEW.id
-    );
-END;
-
--- Trigger to update the product price after a variantitem is updated
-CREATE TRIGGER after_variantitem_update
+    WHERE v.id = NEW.variantId;
+END$$
+DELIMITER ;
+DELIMITER $$
+CREATE TRIGGER trg_variantitem_update_update_product_price
 AFTER UPDATE ON variantitem
 FOR EACH ROW
 BEGIN
-    -- Update the product price to the minimum price of variantitems with quantity > 0
-    UPDATE product
-    SET price = (
-        SELECT MIN(price)
-        FROM variantitem
-        JOIN variant ON variant.id = variantitem.variantId
-        WHERE variant.productId = product.id AND variantitem.quantity > 0
+    UPDATE product p
+    JOIN variant v ON v.productId = p.id
+    SET p.price = (
+        SELECT IFNULL(MIN(vi.price), 0)
+        FROM variantitem vi
+        WHERE vi.variantId = v.id AND vi.quantity > 0
     )
-    WHERE id = (
-        SELECT variant.productId
-        FROM variantitem
-        JOIN variant ON variant.id = variantitem.variantId
-        WHERE variantitem.id = NEW.id
-    );
-END;
+    WHERE v.id = NEW.variantId;
+END$$
+DELIMITER ;
+DELIMITER $$
+CREATE TRIGGER trg_variantitem_delete_update_product_price
+AFTER DELETE ON variantitem
+FOR EACH ROW
+BEGIN
+    UPDATE product p
+    JOIN variant v ON v.productId = p.id
+    SET p.price = (
+        SELECT IFNULL(MIN(vi.price), 0)
+        FROM variantitem vi
+        WHERE vi.variantId = v.id AND vi.quantity > 0
+    )
+    WHERE v.id = OLD.variantId;
+END$$
+DELIMITER ;

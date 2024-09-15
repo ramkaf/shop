@@ -7,19 +7,8 @@ import { prisma } from '~/prisma'
 
 class ProductsService {
   public async add(productCreate: IProductCreate): Promise<Product> {
-    const { title, longDescription, shortDescription, quantity, mainImage, categoryId, uniqueString, slug } =
-      productCreate
     const product = await prisma.product.create({
-      data: {
-        title,
-        longDescription,
-        shortDescription,
-        quantity,
-        mainImage,
-        categoryId,
-        uniqueString,
-        slug
-      }
+      data: productCreate
     })
     if (!product) throw new BadRequestException('invalid credential')
     return product
@@ -31,9 +20,9 @@ class ProductsService {
         uniqueString: dkp
       },
       include: {
-        productVariant: {
+        variant: {
           include: {
-            VariantItems: true
+            variantItems: true
           }
         }
       }
@@ -80,9 +69,9 @@ class ProductsService {
         [sortBy]: sortDir
       },
       include: {
-        productVariant: {
+        variant: {
           include: {
-            VariantItems: true
+            variantItems: true
           }
         }
       }
@@ -97,20 +86,13 @@ class ProductsService {
   }
   public async update(productUpdate: IProductUpdate): Promise<Product> {
     try {
-      const { dkp, title, longDescription, shortDescription, quantity, mainImage, categoryId, slug } = productUpdate
+      const {dkp} = productUpdate
       const whereClause = { uniqueString: dkp }
       const product = await prisma.product.update({
         where: whereClause,
-        data: {
-          title,
-          longDescription,
-          shortDescription,
-          quantity,
-          slug,
-          mainImage,
-          categoryId
-        }
-      })
+        data: productUpdate
+      }
+      )
       return product
     } catch (error) {
       console.log(error)

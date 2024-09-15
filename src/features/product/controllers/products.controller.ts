@@ -35,7 +35,6 @@ class ProductsController {
 
     const productSchema = {
       ...req.validatedBody,
-      quantity: parseInt(req.body.quantity),
       categoryId: parseInt(req.body.categoryId),
       mainImage: req.file!.path.replace(/\\/g, '/'),
       uniqueString: generateUniqueString(),
@@ -48,7 +47,6 @@ class ProductsController {
   public async update(req: Request, res: Response, next: NextFunction) {
     const data = {
       ...req.body,
-      quantity: parseInt(req.body.quantity),
       categoryId: parseInt(req.body.categoryId),
       uniqueString: generateUniqueString(),
       slug: stringToSlug(req.validatedBody.title)

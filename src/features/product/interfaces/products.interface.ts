@@ -4,7 +4,6 @@ export interface IProductBase {
   title: string
   longDescription: string
   shortDescription: string
-  quantity: number
   slug: string
   uniqueString: string
   mainImage: string

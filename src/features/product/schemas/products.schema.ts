@@ -3,7 +3,6 @@ const createProductSchema = Joi.object({
   title: Joi.string().required(),
   longDescription: Joi.string().required(),
   shortDescription: Joi.string().required(),
-  quantity: Joi.number().required(),
   categoryId: Joi.number().required(),
   mainImage: Joi.any().optional()
 })

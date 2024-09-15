@@ -18,5 +18,5 @@
   },
   "files": ["src/type.d.ts"],
   // "files": ["src/type.d.ts"], // global type
-  "include": ["src/**/*"]
+  "include": ["src/**/*", "sql/mysqlSetup.ts"]
 }
