@@ -47,55 +47,72 @@ class CartsService {
           });
           return {cart , item}
         }
-   public async minesItemQuery (cartItemMines : ICartItem){
-    const {variantItemId , price , userId} = cartItemMines
-    const cart = await prisma.cart.upsert({
-      where: { userId  }, // Unique identifier for the cart
-      update: {},
-      create: {
-        totalPrice: 0,
-        userId,
-      },
-      include : {
-          cartItems : true
-      }
-    });
-    const item = cart.cartItems.find(item=>item.variantId === variantItemId)
-    if (!item)
-      throw new BadRequestException("something wrong")
-
-    await prisma.cart.update({
-      where : {
-        id : cart.id
-      },
-      data :{
-        totalPrice : {
-          decrement : price
-        }
-      }
-    })
-    const updatedCartItem = await prisma.cartItem.update({
-      where: {
-        id: item.id,
-      },
-      data: {
-        quantity: {
-          decrement: 1,
+    public async minesItemQuery (cartItemMines : ICartItem){
+      const {variantItemId , price , userId} = cartItemMines
+      const cart = await prisma.cart.upsert({
+        where: { userId  }, // Unique identifier for the cart
+        update: {},
+        create: {
+          totalPrice: 0,
+          userId,
         },
-      },
-    });
-    if (updatedCartItem.quantity === 0)
-      await prisma.cartItem.delete({
+        include : {
+            cartItems : true
+        }
+      });
+      const item = cart.cartItems.find(item=>item.variantId === variantItemId)
+      if (!item)
+        throw new BadRequestException("something wrong")
+
+      await prisma.cart.update({
         where : {
-          id : item.id
+          id : cart.id
+        },
+        data :{
+          totalPrice : {
+            decrement : price
+          }
         }
       })
-    await prisma.variantItem.update({
-      where: { id: variantItemId },
-      data: { quantity: { decrement: 1 } },
-    });
-    return {cart , item}
-   }     
+      const updatedCartItem = await prisma.cartItem.update({
+        where: {
+          id: item.id,
+        },
+        data: {
+          quantity: {
+            decrement: 1,
+          },
+        },
+      });
+      if (updatedCartItem.quantity === 0)
+        await prisma.cartItem.delete({
+          where : {
+            id : item.id
+          }
+        })
+      await prisma.variantItem.update({
+        where: { id: variantItemId },
+        data: { quantity: { decrement: 1 } },
+      });
+      return {cart , item}
+    }     
+    public async getUserCart (userId:number){
+      const cart = await prisma.cart.findFirst(
+        {
+          where : {
+            userId
+          },
+          include : {
+            cartItems : true
+          }
+        }
+      )
+      let totalPrice = 0;
+      cart?.cartItems.map((cart)=>{
+        totalPrice = totalPrice + cart.quantity * cart.price
+      })
+      return {cart , totalPrice}
+    }
 }
 
 export const cartsService: CartsService = new CartsService();
