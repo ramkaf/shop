@@ -1,7 +1,7 @@
 import { Variant, VariantItem } from '@prisma/client'
-import { prisma } from '../../prisma'
 import { BadRequestException } from '~/globals/middlewares/error.middleware'
-import { IVariantCreate, IVariantGetOne, IVariantItemCreate, IVariantItemGetOne } from '~/features/productVariant/interfaces/Variants.interface'
+import { IVariantCreate, IVariantGetOne, IVariantItemCreate, IVariantItemGetOne } from '../interfaces/variants.interface'
+import { prisma } from '~/prisma'
 
 class VariantsService {
   public async add(variantSchema: IVariantCreate): Promise<Variant|undefined> {

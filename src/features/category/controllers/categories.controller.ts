@@ -1,10 +1,10 @@
 ﻿import { NextFunction, Request, Response } from 'express'
 import { HTTP_STATUS } from '~/globals/constants/http'
 import 'express-async-errors'
-import { categoriesService } from '~/services/db/categories.service'
 import { generateUniqueString, responseToClient, stringToSlug, generateWhereCategory } from '~/globals/utils/helper'
 import { UtilsConstants } from '~/globals/constants/utils.constants'
 import { BadRequestException } from '~/globals/middlewares/error.middleware'
+import { categoriesService } from '../services/categories.service'
 class CategoriesController {
   public async getAll(req: Request, res: Response, next: NextFunction) {
     const {

@@ -3,7 +3,7 @@ import { NextFunction, Request, response, Response } from "express";
 import { NotFoundException } from "~/globals/middlewares/error.middleware";
 import { responseToClient } from "~/globals/utils/helper";
 import { prisma } from "~/prisma";
-import { cartsService } from "~/services/db/carts.service";
+import { cartsService } from "~/features/cart/services/carts.service";
 
 class CartsController {
     public async createItem(req: Request, res: Response, next: NextFunction) {

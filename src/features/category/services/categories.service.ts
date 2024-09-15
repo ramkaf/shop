@@ -1,10 +1,9 @@
 ﻿import { Category } from '@prisma/client'
 import { ICategoryCreate, ICategoryGetOne, ICategoryUpdate } from '~/features/category/interfaces/categories.interface'
 import { prisma } from '~/prisma'
-import { PaginatedResult, GetAllOptions } from '../../globals/interfaces/global.interface'
-import { IWhere } from '~/globals/interfaces/global.interface'
+import { GetAllOptions, IWhere, PaginatedResult } from '~/globals/interfaces/global.interface'
 import { BadRequestException } from '~/globals/middlewares/error.middleware'
-import { IPayload } from '~/features/user/interfaces/user.interface'
+
 class CategoriesService {
   public async add(categoryCreate: ICategoryCreate): Promise<Category> {
     const category: Category = await prisma.category.create({

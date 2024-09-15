@@ -1,11 +1,11 @@
 ﻿import { NextFunction, Request, Response } from 'express'
 import 'express-async-errors'
 import { HTTP_STATUS } from '~/globals/constants/http'
-import { productsService } from '~/services/db/products.service'
+import { productsService } from '~/features/product/services/products.service'
 import { generateUniqueString, generateWhereProduct, responseToClient, stringToSlug } from '~/globals/utils/helper'
 import { UtilsConstants } from '~/globals/constants/utils.constants'
 import { BadRequestException } from '~/globals/middlewares/error.middleware'
-import { categoriesService } from '~/services/db/categories.service'
+import { categoriesService } from '~/features/category/services/categories.service'
 class ProductsController {
   public async getAll(req: Request, res: Response, next: NextFunction) {
     const {
@@ -21,7 +21,6 @@ class ProductsController {
   }
   public async getById(req: Request, res: Response, next: NextFunction) {
     if (!Array.isArray(req.validatedParams)) {
-      console.log(req.validatedParams)
       const results = await productsService.readOne(req.validatedParams)
       return responseToClient(res, results)
     }

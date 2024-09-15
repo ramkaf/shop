@@ -1,11 +1,9 @@
 ﻿import { User } from '@prisma/client'
 import { prisma } from '~/prisma'
-import { IGetUser, IUserUpdate } from '../../features/user/interfaces/user.interface'
-import { IAuthLogin, IAuthRegister } from '~/features/user/interfaces/user.interface'
+import {IAuthRegister, IGetUser, IUpdatePassword, IUserUpdate } from '~/features/user/interfaces/user.interface'
 import { BadRequestException, ForbiddenException } from '~/globals/middlewares/error.middleware'
-import { forbidden } from 'joi'
-import { IUpdatePassword } from './../../features/user/interfaces/user.interface'
 import { passwordService } from './password.service'
+
 class UsersService {
   public async create(authRegister: IAuthRegister) {
     const user = await prisma.user.create({

@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from 'express'
 import { responseToClient } from '~/globals/utils/helper'
 import { prisma } from '~/prisma'
-import { addressesService } from '~/services/db/Addresss.service'
+import { addressesService } from '../services/Addresss.service'
 
 class AddressesController {
   public async getById(req: Request, res: Response, next: NextFunction) {}

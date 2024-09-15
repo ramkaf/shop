@@ -1,5 +1,5 @@
 ﻿import { Request, Response, NextFunction } from 'express'
-import { jwtService } from '~/services/db/jwt.service'
+import { jwtService } from '~/features/user/services/jwt.service'
 export const authMiddleware = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const authHeader = req.headers.authorization

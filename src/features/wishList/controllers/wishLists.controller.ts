@@ -1,8 +1,6 @@
 import { NextFunction, Request, Response } from 'express'
-import { prisma } from '~/prisma'
-import { wishListsService } from '~/services/db/wishLists.service'
-import { validateBodySchema } from './../../../globals/middlewares/validate.middleware'
 import { responseToClient } from '~/globals/utils/helper'
+import { wishListsService } from '../services/wishLists.service'
 
 class WishListsController {
   public async get(req: Request, res: Response, next: NextFunction) {

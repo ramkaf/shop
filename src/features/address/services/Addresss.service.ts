@@ -1,6 +1,6 @@
 import { prisma } from '~/prisma'
-import { IAddressCreate, IAddressGetOne, IAddressUpdate } from '../../features/address/interfaces/address.interface'
 import { BadRequestException, NotFoundException } from '~/globals/middlewares/error.middleware'
+import { IAddressCreate, IAddressGetOne, IAddressUpdate } from '../interfaces/address.interface'
 class AddressesService {
   public async getAddressesOfAUser(id: number) {
     const result = prisma.user.findFirst({

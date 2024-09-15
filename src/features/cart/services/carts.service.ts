@@ -1,6 +1,6 @@
 import { BadRequestException, NotFoundException } from "~/globals/middlewares/error.middleware";
 import { prisma } from "~/prisma";
-import { ICartItem } from './../../features/cart/interfaces/carts.interface';
+import { ICartItem } from '../interfaces/carts.interface';
 
 class CartsService {
     public async addItemQuery(cartItemAdd : ICartItem){

@@ -1,9 +1,9 @@
 ﻿import { NextFunction, Request, Response } from 'express'
 import { prisma } from '~/prisma'
-import { usersService } from '~/services/db/users.service'
 import { IUserUpdate } from '../interfaces/user.interface'
 import { responseToClient } from '~/globals/utils/helper'
-import { addressesService } from '~/services/db/Addresss.service'
+import { usersService } from '../services/users.service'
+import { addressesService } from '~/features/address/services/Addresss.service'
 class UsersController {
   public async createUser(req: Request, res: Response, next: NextFunction) {
     const { firstName, lastName, email, password, avatar, username } = req.body

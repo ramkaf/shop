@@ -1,6 +1,6 @@
 import { BadRequestException } from '~/globals/middlewares/error.middleware'
-import { IWishDelete, IWishListCreate } from './../../features/wishList/interfaces/wishLists.interface'
-import { prisma } from './../../prisma'
+import { prisma } from '~/prisma'
+import { IWishDelete, IWishListCreate } from '../interfaces/wishLists.interface'
 class WishListsService {
   public async add(wishListCreate: IWishListCreate) {
     try {
