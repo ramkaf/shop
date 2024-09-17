@@ -1,6 +1,5 @@
-
 export interface ICartItem {
-    variantItemId:number 
-    userId:number
-    price : number
+  variantItemId: number
+  userId: number
+  price: number
 }

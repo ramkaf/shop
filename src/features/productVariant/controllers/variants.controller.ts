@@ -6,7 +6,6 @@ import { responseToClient } from '~/globals/utils/helper'
 
 class VariantsController {
   public async create(req: Request, res: Response, next: NextFunction) {
-    
     const { productId } = req.validatedBody
     await productsService.findById(productId)
     const variantSchema: IVariantCreate = { ...req.validatedBody }
@@ -18,11 +17,11 @@ class VariantsController {
     const variant = await variantsService.remove(variantSchema)
     return responseToClient(res, variant, 200, 'variant deleted successfully')
   }
-  
+
   public async createItem(req: Request, res: Response, next: NextFunction) {
     const { variantId } = req.validatedBody
     await variantsService.findById(variantId)
-    const variantItemSchema: IVariantItemCreate= { ...req.validatedBody }
+    const variantItemSchema: IVariantItemCreate = { ...req.validatedBody }
     const result = await variantsService.addItem(variantItemSchema)
     return responseToClient(res, result, 200, 'product variant item added successfully')
   }

@@ -3,7 +3,7 @@ import { prisma } from '~/prisma'
 import { IUserUpdate } from '../interfaces/user.interface'
 import { responseToClient } from '~/globals/utils/helper'
 import { usersService } from '../services/users.service'
-import { addressesService } from '~/features/address/services/Addresss.service'
+import { addressesService } from '~/features/address/services/Address.service'
 import { cartsService } from '~/features/cart/services/carts.service'
 class UsersController {
   public async createUser(req: Request, res: Response, next: NextFunction) {
@@ -47,10 +47,10 @@ class UsersController {
     const addresses = await addressesService.getAddressesOfAUser(id)
     return responseToClient(res, addresses)
   }
-  public async cart (req: Request, res: Response, next: NextFunction){
-    const {userId} = req.currentUser
+  public async cart(req: Request, res: Response, next: NextFunction) {
+    const { userId } = req.currentUser
     const cart = await cartsService.getUserCart(userId)
-    return responseToClient(res,cart)
+    return responseToClient(res, cart)
   }
 }
 export const userController: UsersController = new UsersController()

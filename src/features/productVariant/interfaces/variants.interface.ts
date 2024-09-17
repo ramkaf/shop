@@ -9,8 +9,8 @@ export interface IVariantGetOne {
 export interface IVariantItemCreate {
   variantId: number
   name: string
-  price : number
-  quantity : number
+  price: number
+  quantity: number
 }
 
 export interface IVariantItemGetOne {

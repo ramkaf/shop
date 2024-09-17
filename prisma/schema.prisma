@@ -19,21 +19,24 @@ enum Role {
 }
 
 model User {
-  id        Int        @id @default(autoincrement())
-  email     String     @unique @db.VarChar(255)
-  password  String     @db.VarChar(255)
-  firstName String
-  lastName  String
-  username  String     @unique
-  avatar    String     @default("")
-  role      Role       @default(USER)
-  isActive  Boolean    @default(true)
-  wishList  Wishlist[]
-  address   Address[]
-  cart      Cart?
-  createdAt DateTime   @default(now())
-  updatedAt DateTime   @updatedAt
-  cartId    Int?
+  id         Int        @id @default(autoincrement())
+  email      String     @unique @db.VarChar(255)
+  password   String     @db.VarChar(255)
+  firstName  String
+  lastName   String
+  username   String     @unique
+  avatar     String     @default("")
+  role       Role       @default(USER)
+  isActive   Boolean    @default(true)
+  wishList   Wishlist[]
+  address    Address[]
+  order      Order[]
+  coupon     Coupon[]   @relation("CreatedCoupons") // One-to-many: coupons created by this user
+  cart       Cart?
+  coupons    Coupon[]   @relation("UserCoupons")    // Many-to-many: coupons used by this user
+  createdAt  DateTime   @default(now())
+  updatedAt  DateTime   @updatedAt
+  cartId     Int?
 }
 
 model Category {
@@ -75,7 +78,6 @@ model Variant {
   product      Product       @relation(fields: [productId], references: [id], onDelete: Cascade)
   productId    Int
   variantItems VariantItem[]
-  cartItem     CartItem[]
 }
 
 model VariantItem {
@@ -85,6 +87,8 @@ model VariantItem {
   name      String
   quantity  Int
   price     Float
+  cartItem     CartItem[]
+  orderItem OrderItem[]
 }
 
 model ProductImage {
@@ -114,9 +118,9 @@ model Address {
   address    String
   postalCode String
   unit       String
-
   user   User @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId Int
+  order Order[]
 }
 
 model Cart {
@@ -133,11 +137,72 @@ model CartItem {
   id        Int     @id @default(autoincrement())
   cart      Cart    @relation(fields: [cartId], references: [id], onDelete: Cascade)
   cartId    Int
-  variant   Variant @relation(fields: [variantId], references: [id])
+  variant   VariantItem @relation(fields: [variantId], references: [id])
   variantId Int
   price     Float
   quantity  Int
   createdAt  DateTime   @default(now())
   updatedAt  DateTime   @updatedAt
   @@unique([cartId, variantId])
+}
+enum CouponType {
+  VALUE
+  PERCENTAGE
+}
+model Order {
+  id         Int        @id @default(autoincrement())
+  uniuqeString String
+  discount Int @default(0)
+  user      User?       @relation(fields: [userId], references: [id])
+  userId     Int       
+  orderItem  OrderItem[]
+  recipientName String
+  recipientlastName String
+  recipientNumber String
+  deliveringDate String
+  ShippingDate DateTime
+  ShippingCost Float 
+  cartPrice Float
+  servicePrice Float
+  finalPrice Float
+  address      Address    @relation(fields: [addressId], references: [id], onDelete: Cascade)
+  addressId    Int
+  isPaid Boolean @default(false)
+  isdelivered Boolean @default(false)
+  createdAt  DateTime   @default(now())
+  updatedAt  DateTime   @updatedAt
+}
+
+model OrderItem {
+  id        Int     @id @default(autoincrement())
+  order      Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  orderId    Int
+  price     Float
+  variant   VariantItem @relation(fields: [variantId], references: [id])
+  variantId Int
+  quantity  Int
+  createdAt  DateTime   @default(now())
+  updatedAt  DateTime   @updatedAt
+}
+
+model Coupon {
+  id                    Int      @id @default(autoincrement())
+  code                  String   @unique
+  type                  CouponType
+  discountValue         Float?   // For value-based coupons
+  percentage            Float?   // For percentage-based coupons
+  minBuyPrice           Float?   // Minimum price required for value-based coupons
+  maxDiscount           Float?   // Maximum discount for percentage-based coupons
+  firstOrderOnly        Boolean  @default(false) // For first orders only
+  expiresAt             DateTime
+  userId                Int?     // Optional: If null, coupon applies to all users
+  creator               User?    @relation("CreatedCoupons", fields: [userId], references: [id]) // One-to-many relationship: creator
+  enable                Boolean  @default(true)
+  usedQuantity          Int      @default(0)
+  usedPermittedForEachUser Int?
+  usedPermittedAll      Int?
+  
+  users                 User[]   @relation("UserCoupons") // Many-to-many: users who have used this coupon
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime @updatedAt
 }

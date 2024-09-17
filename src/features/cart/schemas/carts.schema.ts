@@ -1,8 +1,7 @@
-
-import Joi from 'joi';
+import Joi from 'joi'
 
 const cartItemSchema = Joi.object({
-    variantItemId : Joi.number().required()
-});
+  variantItemId: Joi.number().required()
+})
 
-export {cartItemSchema };
+export { cartItemSchema }

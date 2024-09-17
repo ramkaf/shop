@@ -12,12 +12,11 @@ const getOneVariantSchema = Joi.object({
 const createVariantItemSchema = Joi.object({
   variantId: Joi.number().required(),
   name: Joi.string().required(),
-  price : Joi.number().optional(),
-  quantity : Joi.number().required()
+  price: Joi.number().optional(),
+  quantity: Joi.number().required()
 })
 const getOneVariantItemSchema = Joi.object({
   id: Joi.number().required()
 })
 
-
-export { createVariantSchema,createVariantItemSchema , getOneVariantItemSchema, getOneVariantSchema }
+export { createVariantSchema, createVariantItemSchema, getOneVariantItemSchema, getOneVariantSchema }

@@ -3,7 +3,7 @@ import { BadRequestException } from '~/globals/middlewares/error.middleware'
 import { responseToClient } from '~/globals/utils/helper'
 import { jwtService } from '~/features/user/services/jwt.service'
 import { passwordService } from '~/features/user/services/password.service'
-import { usersService } from './../services/users.service';
+import { usersService } from './../services/users.service'
 
 export class AuthController {
   public async register(req: Request, res: Response, next: NextFunction) {

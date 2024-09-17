@@ -1,6 +1,6 @@
 ﻿import { User } from '@prisma/client'
 import { prisma } from '~/prisma'
-import {IAuthRegister, IGetUser, IUpdatePassword, IUserUpdate } from '~/features/user/interfaces/user.interface'
+import { IAuthRegister, IGetUser, IUpdatePassword, IUserUpdate } from '~/features/user/interfaces/user.interface'
 import { BadRequestException, ForbiddenException } from '~/globals/middlewares/error.middleware'
 import { passwordService } from './password.service'
 

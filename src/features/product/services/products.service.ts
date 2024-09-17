@@ -86,13 +86,12 @@ class ProductsService {
   }
   public async update(productUpdate: IProductUpdate): Promise<Product> {
     try {
-      const {dkp} = productUpdate
+      const { dkp } = productUpdate
       const whereClause = { uniqueString: dkp }
       const product = await prisma.product.update({
         where: whereClause,
         data: productUpdate
-      }
-      )
+      })
       return product
     } catch (error) {
       console.log(error)
