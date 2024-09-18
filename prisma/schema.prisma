@@ -199,7 +199,7 @@ model Coupon {
   creator               User?    @relation("CreatedCoupons", fields: [userId], references: [id]) // One-to-many relationship: creator
   enable                Boolean  @default(true)
   usedQuantity          Int      @default(0)
-  usedPermittedForEachUser Int?
+  usedPermittedForEachUser Int? 
   usedPermittedAll      Int?
   
   users                 User[]   @relation("UserCoupons") // Many-to-many: users who have used this coupon

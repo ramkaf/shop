@@ -1,4 +1,4 @@
-import { Cart } from "@prisma/client"
+import { Cart } from '@prisma/client'
 
 export interface ICouponCreate {
   code: string // Coupon code is required
@@ -7,7 +7,6 @@ export interface ICouponCreate {
   percentage?: number // Percentage for PERCENTAGE type coupons
   minBuyPrice?: number // Minimum order value for VALUE type coupons
   maxDiscount?: number // Maximum discount allowed for PERCENTAGE type coupons
-  expiresIn?: '30m' | '1d' | '1M' | '1y' // Expiration duration
   expiresAt: Date // Absolute expiration date (required)
   firstOrderOnly?: boolean // Applies to first order only
   userId?: number // Optional field: if null, coupon applies to all users
@@ -15,11 +14,26 @@ export interface ICouponCreate {
 }
 
 export interface IApplyCoupon {
-    code: string,
-   cart:Cart
-   userId: number
+  code: string
+  cart: Cart
+  userId: number
 }
 
 export interface IGetCoupon {
-    code: string
+  code: string
+}
+
+export interface ICouponFilters {
+  code?: string;
+  type?: 'percentage' | 'value';
+  minBuyPrice?: number;
+  firstOrderOnly?: boolean;
+  expiresBefore?: string;
+  userId?: number;
+  enable?: boolean;
+  creatorId?: number;
+  beginRange?: string;
+  endRange?: string;
+  sortBy?: 'createdAt' | 'expiresAt' | 'usedQuantity' | 'percentage' | 'discountValue'; 
+  sortOrder?: 'asc' | 'desc'; 
 }

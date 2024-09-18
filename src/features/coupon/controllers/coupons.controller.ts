@@ -4,15 +4,17 @@ import { prisma } from '~/prisma'
 import couponsService from '../services/coupons.service'
 
 class CouponsController {
-  public async getAll(req: Request, res: Response, next: NextFunction) {}
-  public async getById(req: Request, res: Response, next: NextFunction) {}
+  public async getAll(req: Request, res: Response, next: NextFunction) {
+    try {
+      const couponFilterSchema = {...req.validatedBody}
+      const result = await couponsService.getAll(couponFilterSchema)
+      return responseToClient(res,result)
+    } catch (error) {
+      res.status(500).json({ error: 'An error occurred while fetching coupons.' });
+    }
+  }
   public async create(req: Request, res: Response, next: NextFunction) {
-    const {
-      code,
-      expiresIn,
-      expiresAt,
-      userId
-    } = req.validatedBody
+    const { code, expiresIn, expiresAt, userId, ...rest } = req.validatedBody
 
     let expirationDate: Date
     let couponCode = code ?? RandomStringUtil.generateRandomAlphaNumeric(8)
@@ -30,8 +32,7 @@ class CouponsController {
         throw new Error('Expiration date cannot be before the current date.')
       }
       expirationDate = expiresAt
-    } 
-    else if (expiresIn) {
+    } else if (expiresIn) {
       switch (expiresIn) {
         case '30m':
           expirationDate = new Date(now.getTime() + 30 * 60 * 1000) // 30 minutes
@@ -48,23 +49,23 @@ class CouponsController {
         default:
           throw new Error('Invalid expiration duration.')
       }
-    } 
-    else {
+    } else {
       throw new Error('You must provide either an expiration duration or an expiration date.')
     }
-
     const couponSchema = {
-      ...req.validatedBody,
-      code : couponCode,
-      expiresAt : expirationDate,
+      ...rest,
+      code: couponCode,
+      expiresAt: expirationDate,
       userId: userId ? userId : undefined
     }
     const coupon = await couponsService.create(couponSchema)
-    return responseToClient(res,coupon)
-
+    return responseToClient(res, coupon)
   }
   public async update(req: Request, res: Response, next: NextFunction) {}
-  public async delete(req: Request, res: Response, next: NextFunction) {}
+  public async delete(req: Request, res: Response, next: NextFunction) {
+    const getOneCouponSchema = { ...req.validatedBody }
+    const result = await couponsService.remove(getOneCouponSchema)
+  }
 }
 
 export const couponsController: CouponsController = new CouponsController()

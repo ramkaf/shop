@@ -7,7 +7,8 @@ import wishListsRouter from '~/features/wishList/routes/wishLists.routes'
 import addressesRouter from '~/features/address/routes/addresses.routes'
 import variantsRouter from '~/features/productVariant/routes/variants.routes'
 import cartsRouter from '~/features/cart/routes/carts.routes'
-import couponsRouter from './../../features/coupon/routes/coupons.routes';
+import couponsRouter from './../../features/coupon/routes/coupons.routes'
+import ordersRouter from '~/features/order/routes/orders.routes'
 
 const appRoutes = (app: Application) => {
   app.use('/api/v1/users', userRoute)
@@ -19,5 +20,6 @@ const appRoutes = (app: Application) => {
   app.use('/api/v1/address', addressesRouter)
   app.use('/api/v1/cart', cartsRouter)
   app.use('/api/v1/coupon', couponsRouter)
+  app.use('/api/v1/order', ordersRouter)
 }
 export default appRoutes
