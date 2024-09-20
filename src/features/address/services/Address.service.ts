@@ -1,9 +1,7 @@
 import { prisma } from '~/prisma'
 import { BadRequestException, NotFoundException } from '~/globals/middlewares/error.middleware'
 import { IAddressCreate, IAddressGetCityOfProvince, IAddressGetOne, IAddressUpdate } from '../interfaces/address.interface'
-import redis from '~/globals/services/redisClient'
 import redisService from '~/globals/services/redisClient'
-import { log } from 'node:console'
 class AddressesService {
 
   public async getAddressesOfAUser(id: number) {

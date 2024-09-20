@@ -1,8 +1,6 @@
 import { NextFunction, Request, Response } from 'express'
 import { responseToClient } from '~/globals/utils/helper'
-import { prisma } from '~/prisma'
 import { addressesService } from '../services/Address.service'
-import { log } from 'node:console'
 
 class AddressesController {
   public async getProvinces(req: Request, res: Response, next: NextFunction) {

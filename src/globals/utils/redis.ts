@@ -20,7 +20,6 @@ class RedisClient {
     this.client = createClient({
       url: `redis://${this.config.user}:${this.config.password}@${this.config.host}:${this.config.port}`,
     });
-    this.client.on("error", (err) => console.error("Redis Client Error", err));
   }
 
   public static getInstance(config: RedisConfig): RedisClient {
@@ -32,6 +31,7 @@ class RedisClient {
 
   async connect(): Promise<void> {
     if (!this.client.isOpen) {
+      this.client.on("error", (err) => console.error("Redis Client Error", err));
       await this.client.connect();
     }
   }
