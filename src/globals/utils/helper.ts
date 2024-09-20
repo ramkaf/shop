@@ -3,6 +3,7 @@ import { IFilter, ISearch } from '../interfaces/global.interface'
 import { any, string } from 'joi'
 import { IPayload } from '~/features/user/interfaces/user.interface'
 import { ForbiddenException } from '../middlewares/error.middleware'
+
 export function responseToClient(
   res: Response,
   data: any,
@@ -90,4 +91,23 @@ export function checkUserPermission(model: any, payload: IPayload) {
   const { id } = payload
   const { userId } = model
   if (id !== userId) throw new ForbiddenException('forbidden')
+}
+export class RandomStringUtil {
+  static generateRandomNumbers(length: number): string {
+    const numbers = '0123456789'
+    let result = ''
+    for (let i = 0; i < length; i++) {
+      result += numbers.charAt(Math.floor(Math.random() * numbers.length))
+    }
+    return result
+  }
+
+  static generateRandomAlphaNumeric(length: number): string {
+    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
+    let result = ''
+    for (let i = 0; i < length; i++) {
+      result += chars.charAt(Math.floor(Math.random() * chars.length))
+    }
+    return result
+  }
 }

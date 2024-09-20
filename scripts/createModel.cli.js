@@ -23,11 +23,11 @@ const capitalizedModelName = capitalizeFirstLetter(modelName)
 const capitalizedPluralModelName = capitalizeFirstLetter(pluralModelName)
 
 const featuresDir = path.join(__dirname, '../src/features')
-const servicesDir = path.join(__dirname, '../src/services/db')
 const modelDir = path.join(featuresDir, modelName)
 const controllerDir = path.join(modelDir, 'controllers')
 const interfaceDir = path.join(modelDir, 'interfaces')
 const routeDir = path.join(modelDir, 'routes')
+const servicesDir = path.join(modelDir, 'services')
 const schemaDir = path.join(modelDir, 'schemas')
 
 mkdirp.sync(controllerDir)

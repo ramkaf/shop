@@ -1,14 +1,19 @@
 import { Variant, VariantItem } from '@prisma/client'
 import { BadRequestException } from '~/globals/middlewares/error.middleware'
-import { IVariantCreate, IVariantGetOne, IVariantItemCreate, IVariantItemGetOne } from '../interfaces/variants.interface'
+import {
+  IVariantCreate,
+  IVariantGetOne,
+  IVariantItemCreate,
+  IVariantItemGetOne
+} from '../interfaces/variants.interface'
 import { prisma } from '~/prisma'
 
 class VariantsService {
-  public async add(variantSchema: IVariantCreate): Promise<Variant|undefined> {
-       const variant = await prisma.variant.create({
-        data: variantSchema
-      })
-      return variant
+  public async add(variantSchema: IVariantCreate): Promise<Variant | undefined> {
+    const variant = await prisma.variant.create({
+      data: variantSchema
+    })
+    return variant
   }
   public async remove(variantSchema: IVariantGetOne): Promise<Variant> {
     try {
