@@ -5,6 +5,11 @@ import { prisma } from '~/prisma'
 import { cartsService } from '~/features/cart/services/carts.service'
 
 class CartsController {
+  public async get(req: Request, res: Response, next: NextFunction) {
+    const { id } = req.currentUser
+    const result = await cartsService.getUserCart(id)
+    return responseToClient(res, result)
+  }
   public async createItem(req: Request, res: Response, next: NextFunction) {
     const { variantItemId } = req.validatedBody
     const variantItemDetails = await prisma.variantItem.findUnique({

@@ -7,6 +7,7 @@ import { cartItemSchema } from '../schemas/carts.schema'
 const cartsRouter = express.Router()
 cartsRouter.use(isLoggedIn)
 
+cartsRouter.get('/', cartsController.get)
 cartsRouter.post('/', validateBodySchema(cartItemSchema), cartsController.createItem)
 cartsRouter.delete('/', validateBodySchema(cartItemSchema), cartsController.deleteItem)
 

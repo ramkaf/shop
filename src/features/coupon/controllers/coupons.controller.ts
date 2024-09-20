@@ -18,10 +18,10 @@ class CouponsController {
     const { code, expiresIn, expiresAt, userId, ...rest } = req.validatedBody
 
     let expirationDate: Date
-    let couponCode = code ?? RandomStringUtil.generateRandomAlphaNumeric(8)
+    let couponCode = code ?? RandomStringUtil.generateRandomString(8 , 'alphanumeric')
     let existingCoupon = await couponsService.findOne(couponCode)
     while (existingCoupon) {
-      couponCode = RandomStringUtil.generateRandomAlphaNumeric(8) // Generate a new code if it already exists
+      couponCode = RandomStringUtil.generateRandomString(8 , 'alphanumeric')// Generate a new code if it already exists
       existingCoupon = await prisma.coupon.findUnique({
         where: { code: couponCode }
       })

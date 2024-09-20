@@ -7,7 +7,7 @@ class JwtService {
   public async generateAccessToken(user: User): Promise<string> {
     const { id, firstName, lastName, email, role } = user
     const accessToken: string = jwt.sign({ id, firstName, lastName, email, role }, process.env.ACCESS_TOKEN!, {
-      expiresIn: '1d'
+      expiresIn: '30d'
     })
     return accessToken
   }

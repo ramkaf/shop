@@ -93,21 +93,27 @@ export function checkUserPermission(model: any, payload: IPayload) {
   if (id !== userId) throw new ForbiddenException('forbidden')
 }
 export class RandomStringUtil {
-  static generateRandomNumbers(length: number): string {
-    const numbers = '0123456789'
-    let result = ''
-    for (let i = 0; i < length; i++) {
-      result += numbers.charAt(Math.floor(Math.random() * numbers.length))
+  static generateRandomString(length: number, type: 'alpha' | 'numeric' | 'alphanumeric'): string {
+    let chars = '';
+    switch (type) {
+      case 'alpha':
+        chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
+        break;
+      case 'numeric':
+        chars = '0123456789';
+        break;
+      case 'alphanumeric':
+        chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+        break;
     }
-    return result
-  }
 
-  static generateRandomAlphaNumeric(length: number): string {
-    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
-    let result = ''
+    let result = '';
     for (let i = 0; i < length; i++) {
-      result += chars.charAt(Math.floor(Math.random() * chars.length))
+      result += chars.charAt(Math.floor(Math.random() * chars.length));
     }
-    return result
+
+    // Append current timestamp in milliseconds for uniqueness
+    const timestamp = Date.now().toString();
+    return result + timestamp;
   }
 }
