@@ -6,7 +6,6 @@ const ordersRouter = express.Router()
 ordersRouter.get('/', ordersController.getAll)
 ordersRouter.get('/:id', ordersController.getById)
 ordersRouter.post('/', ordersController.create)
-ordersRouter.put('/:id', ordersController.update)
 ordersRouter.delete('/:id', ordersController.delete)
 
 export default ordersRouter

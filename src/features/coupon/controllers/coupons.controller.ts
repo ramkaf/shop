@@ -4,6 +4,7 @@ import { prisma } from '~/prisma'
 import couponsService from '../services/coupons.service'
 
 class CouponsController {
+
   public async getAll(req: Request, res: Response, next: NextFunction) {
     try {
       const couponFilterSchema = {...req.validatedBody}
@@ -61,10 +62,15 @@ class CouponsController {
     const coupon = await couponsService.create(couponSchema)
     return responseToClient(res, coupon)
   }
-  public async update(req: Request, res: Response, next: NextFunction) {}
+  public async update(req: Request, res: Response, next: NextFunction) {
+    const {id,...rest} = req.validatedBody;
+    const updatedCoupon = await couponsService.update(id, rest);
+    return responseToClient(res, updatedCoupon);
+  }
   public async delete(req: Request, res: Response, next: NextFunction) {
-    const getOneCouponSchema = { ...req.validatedBody }
+    const getOneCouponSchema = { ...req.validatedParams }
     const result = await couponsService.remove(getOneCouponSchema)
+    return responseToClient(res,result)
   }
 }
 

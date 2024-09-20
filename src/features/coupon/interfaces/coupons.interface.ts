@@ -13,6 +13,13 @@ export interface ICouponCreate {
   enable: boolean // Enable or disable the coupon
 }
 
+export interface ICouponUpdate {
+  id: number; // Coupon ID to specify which coupon to update
+  expiresAt?: Date; // Optional, can be updated
+  firstOrderOnly?: boolean; // Optional, can be updated
+  userId?: number | null; // Optional, can be updated or set to null
+  enable?: boolean; // Optional, can be updated
+}
 export interface IApplyCoupon {
   code: string
   cart: Cart

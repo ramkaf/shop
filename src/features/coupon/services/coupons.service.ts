@@ -1,6 +1,6 @@
 import { PrismaClient } from '@prisma/client'
 import { isBefore } from 'date-fns'
-import { IApplyCoupon, ICouponCreate, ICouponFilters, IGetCoupon } from '../interfaces/coupons.interface'
+import { IApplyCoupon, ICouponCreate, ICouponFilters, ICouponUpdate, IGetCoupon } from '../interfaces/coupons.interface'
 const prisma = new PrismaClient()
 
 class CouponService {
@@ -15,7 +15,12 @@ class CouponService {
     })
     return coupon
   }
-
+  async update(id: number, couponUpdate: ICouponUpdate) {
+    return await prisma.coupon.update({
+      where: { id },
+      data: couponUpdate
+    });
+  }
   async apply(applyCoupon: IApplyCoupon) {
     const { code, cart, userId } = applyCoupon
     const { totalPrice } = cart

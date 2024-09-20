@@ -33,6 +33,25 @@ export const createCouponSchema = Joi.object({
   expiresAt: Joi.date().greater('now').optional()
 }).xor('expiresIn', 'expiresAt') 
 
+export const updateCouponSchema = Joi.object({
+  // ID to specify which coupon to update
+  id: Joi.number().required(), // Coupon ID is required for updating
+
+  // Restricted fields that should not be allowed for updates
+  code: Joi.forbidden(), // Cannot update code
+  type: Joi.forbidden(), // Cannot update type
+  discountValue: Joi.forbidden(), // Cannot update discountValue
+  percentage: Joi.forbidden(), // Cannot update percentage
+  minBuyPrice: Joi.forbidden(), // Cannot update minBuyPrice
+  maxDiscount: Joi.forbidden(), // Cannot update maxDiscount
+
+  // Fields that can be updated
+  expiresAt: Joi.date().greater('now').optional(),
+  firstOrderOnly: Joi.boolean().optional(),
+  userId: Joi.number().optional().allow(null),
+  enable: Joi.boolean().optional(),
+}).required();
+
 export const getOneCouponSchema = Joi.object({
   code: Joi.string().required()
 })
