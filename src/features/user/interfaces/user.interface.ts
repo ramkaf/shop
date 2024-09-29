@@ -9,6 +9,29 @@ export interface IAuthLogin {
   email: string
   password: string
 }
+export interface IUser {
+  id: number;
+  email: string;
+  password: string;
+  firstName: string;
+  lastName: string;
+  username: string;
+  avatar: string;
+  role: Role;
+  isActive: boolean;
+  wishList: IWishlist[];
+  address: IAddress[];
+  order: IOrder[];
+  coupon: ICoupon[]; // Created Coupons
+  cart?: ICart; // Optional
+  coupons: ICoupon[]; // User Coupons
+  createdAt: Date;
+  updatedAt: Date;
+}
+enum Role {
+  USER = 'USER',
+  ADMIN = 'ADMIN',
+}
 
 export interface IUserUpdate {
   path?: string

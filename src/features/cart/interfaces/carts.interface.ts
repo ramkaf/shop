@@ -1,3 +1,6 @@
+import { IVariantItem } from "~/features/productVariant/interfaces/variants.interface";
+import { IUser } from "~/features/user/interfaces/user.interface"
+
 export interface ICartItemCreate {
   variantItemId: number
   userId: number
@@ -5,22 +8,24 @@ export interface ICartItemCreate {
 }
 
 export interface ICartItem {
-  id: number
-  cartId: number
-  variantId: number
-  price: number
-  quantity: number
-  createdAt: Date
-  updatedAt: Date
+  id: number;
+  cart: ICart;
+  cartId: number;
+  variant: IVariantItem;
+  variantId: number;
+  price: number;
+  quantity: number;
+  createdAt: Date;
+  updatedAt: Date;
 }
-
 export interface ICart {
-  id: number
-  totalPrice: number // Calculated total price for the cart
-  userId: number
-  createdAt: Date
-  updatedAt: Date
-  cartItems: ICartItem[] // Array of cart items
+  id: number;
+  totalPrice: number;
+  user: IUser;
+  userId: number; // Unique
+  cartItems: ICartItem[];
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 export interface ICartResponse {

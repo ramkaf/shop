@@ -1,5 +1,7 @@
 import { Cart } from '@prisma/client'
 import { ICart } from '~/features/cart/interfaces/carts.interface'
+import { IOrder } from '~/features/order/interfaces/orders.interface'
+import { IUser } from '~/features/user/interfaces/user.interface'
 
 export interface ICouponCreate {
   code: any // Coupon code is required
@@ -26,6 +28,35 @@ export interface IApplyCoupon {
   cart: ICart
   userId: number
 }
+
+
+enum CouponType {
+  VALUE = 'VALUE',
+  PERCENTAGE = 'PERCENTAGE',
+}
+
+export interface ICoupon {
+  id: number;
+  code: string;
+  type: CouponType;
+  discountValue?: number; // Optional
+  percentage?: number; // Optional
+  minBuyPrice?: number; // Optional
+  maxDiscount?: number; // Optional
+  firstOrderOnly: boolean;
+  expiresAt: Date;
+  userId?: number; // Optional
+  creator?: IUser; // Optional
+  enable: boolean;
+  usedQuantity: number;
+  usedPermittedForEachUser?: number; // Optional
+  usedPermittedAll?: number; // Optional
+  orders: IOrder[];
+  users: IUser[]; // Many-to-many
+  createdAt: Date;
+  updatedAt: Date;
+}
+
 
 export interface IGetCoupon {
   code: string
