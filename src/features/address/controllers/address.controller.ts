@@ -5,12 +5,12 @@ import { addressesService } from '../services/Address.service'
 class AddressesController {
   public async getProvinces(req: Request, res: Response, next: NextFunction) {
     const provinces = await addressesService.getAllProvinces()
-    return responseToClient(res,provinces)
+    return responseToClient(res, provinces)
   }
   public async getCityOfProvince(req: Request, res: Response, next: NextFunction) {
-    const {province_id} = req.validatedParams
-    const provinces = await addressesService.getCityOfProvince({province_id})
-    return responseToClient(res,provinces)
+    const { province_id } = req.validatedParams
+    const provinces = await addressesService.getCityOfProvince({ province_id })
+    return responseToClient(res, provinces)
   }
   public async create(req: Request, res: Response, next: NextFunction) {
     const { id: userId } = req.currentUser
@@ -28,7 +28,6 @@ class AddressesController {
     const address = addressesService.delete(deleteAddressSchema)
     return responseToClient(res, address)
   }
-
 }
 
 export const addressesController: AddressesController = new AddressesController()

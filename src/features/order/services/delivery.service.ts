@@ -1,9 +1,6 @@
-import { cartsService } from "~/features/cart/services/carts.service";
-import { prisma } from "~/prisma"
+import { cartsService } from '~/features/cart/services/carts.service'
+import { prisma } from '~/prisma'
 
-class DeliverService {
-    
-
-}   
+class DeliverService {}
 
 export const ordersService: OrdersService = new OrdersService()

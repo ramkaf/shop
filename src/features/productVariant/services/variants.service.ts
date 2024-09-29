@@ -15,6 +15,7 @@ class VariantsService {
     })
     return variant
   }
+
   public async remove(variantSchema: IVariantGetOne): Promise<Variant> {
     try {
       const variant: Variant = await prisma.variant.delete({
@@ -47,6 +48,8 @@ class VariantsService {
       })
       return variantItem
     } catch (error) {
+      console.log(error)
+
       throw new BadRequestException('no variant item belongs to this id')
     }
   }

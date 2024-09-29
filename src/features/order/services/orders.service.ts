@@ -1,46 +1,43 @@
-import { cartsService } from "~/features/cart/services/carts.service";
-import { prisma } from "~/prisma"
+import { cartsService } from '~/features/cart/services/carts.service'
+import { prisma } from '~/prisma'
 
 class OrdersService {
+  public async getAll(id: number) {
+    const userWithOrders = await prisma.user.findFirst({
+      where: {
+        id
+      },
+      include: {
+        order: true
+      }
+    })
 
-    public async getAll (id : number){
+    return userWithOrders
+  }
 
-        const userWithOrders = await prisma.user.findFirst({
-            where : {
-                id
-            },
-            include : {
-                order : true
-            }
-        })
+  public async get(id: number) {
+    const order = await prisma.order.findUnique({
+      where: {
+        id
+      }
+    })
 
-        return userWithOrders
-    }
-    public async get (id : number){
+    return order
+  }
 
-        const order = await prisma.order.findUnique({
-            where: {
-                id ,
-            },
-          });
+  public async remove(id: number) {
+    const order = await prisma.order.delete({
+      where: {
+        id
+      }
+    })
 
-        return order
-    }
-    public async remove (id : number){
+    return order
+  }
 
-        const order = await prisma.order.delete({
-            where: {
-                id ,
-            },
-          });
-
-        return order
-    }
-
-    public async create (id : number){
-       
-    }
-
-}   
+  public async calculateOrderDeliveryCost(address) {
+    return 10
+  }
+}
 
 export const ordersService: OrdersService = new OrdersService()

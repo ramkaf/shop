@@ -42,7 +42,7 @@ CREATE TABLE `Product` (
     `title` VARCHAR(191) NOT NULL,
     `longDescription` TEXT NOT NULL,
     `shortDescription` VARCHAR(191) NOT NULL,
-    `price` DOUBLE NOT NULL DEFAULT 0,
+    `price` DOUBLE NULL,
     `quantity` INTEGER NOT NULL DEFAULT 0,
     `mainImage` VARCHAR(191) NOT NULL,
     `slug` VARCHAR(191) NOT NULL,
@@ -99,9 +99,8 @@ CREATE TABLE `Wishlist` (
 -- CreateTable
 CREATE TABLE `Address` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
-    `country` VARCHAR(191) NOT NULL,
-    `province` VARCHAR(191) NOT NULL,
-    `city` VARCHAR(191) NOT NULL,
+    `provinceId` INTEGER NULL,
+    `cityId` INTEGER NULL,
     `address` VARCHAR(191) NOT NULL,
     `postalCode` VARCHAR(191) NOT NULL,
     `unit` VARCHAR(191) NOT NULL,
@@ -143,7 +142,7 @@ CREATE TABLE `Order` (
     `discount` INTEGER NOT NULL DEFAULT 0,
     `userId` INTEGER NOT NULL,
     `recipientName` VARCHAR(191) NOT NULL,
-    `recipientlastName` VARCHAR(191) NOT NULL,
+    `recipientLastName` VARCHAR(191) NOT NULL,
     `recipientNumber` VARCHAR(191) NOT NULL,
     `deliveringDate` VARCHAR(191) NOT NULL,
     `ShippingDate` DATETIME(3) NOT NULL,
@@ -182,8 +181,8 @@ CREATE TABLE `Coupon` (
     `type` ENUM('VALUE', 'PERCENTAGE') NOT NULL,
     `discountValue` DOUBLE NULL,
     `percentage` DOUBLE NULL,
-    `minBuyPrice` DOUBLE NULL,
-    `maxDiscount` DOUBLE NULL,
+    `minBuyPrice` DOUBLE NOT NULL,
+    `maxDiscount` DOUBLE NOT NULL,
     `firstOrderOnly` BOOLEAN NOT NULL DEFAULT false,
     `expiresAt` DATETIME(3) NOT NULL,
     `userId` INTEGER NULL,
@@ -195,6 +194,26 @@ CREATE TABLE `Coupon` (
     `updatedAt` DATETIME(3) NOT NULL,
 
     UNIQUE INDEX `Coupon_code_key`(`code`),
+    PRIMARY KEY (`id`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- CreateTable
+CREATE TABLE `Province` (
+    `id` INTEGER NOT NULL AUTO_INCREMENT,
+    `name` VARCHAR(19) NULL,
+    `slug` VARCHAR(17) NULL,
+    `tel_prefix` VARCHAR(3) NULL,
+
+    PRIMARY KEY (`id`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- CreateTable
+CREATE TABLE `City` (
+    `id` INTEGER NOT NULL AUTO_INCREMENT,
+    `name` VARCHAR(17) NULL,
+    `slug` VARCHAR(26) NULL,
+    `province_id` INTEGER NULL,
+
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
@@ -226,6 +245,12 @@ ALTER TABLE `Wishlist` ADD CONSTRAINT `Wishlist_userId_fkey` FOREIGN KEY (`userI
 ALTER TABLE `Wishlist` ADD CONSTRAINT `Wishlist_productId_fkey` FOREIGN KEY (`productId`) REFERENCES `Product`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
+ALTER TABLE `Address` ADD CONSTRAINT `Address_provinceId_fkey` FOREIGN KEY (`provinceId`) REFERENCES `Province`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `Address` ADD CONSTRAINT `Address_cityId_fkey` FOREIGN KEY (`cityId`) REFERENCES `City`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
 ALTER TABLE `Address` ADD CONSTRAINT `Address_userId_fkey` FOREIGN KEY (`userId`) REFERENCES `User`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
@@ -254,6 +279,9 @@ ALTER TABLE `OrderItem` ADD CONSTRAINT `OrderItem_variantId_fkey` FOREIGN KEY (`
 
 -- AddForeignKey
 ALTER TABLE `Coupon` ADD CONSTRAINT `Coupon_userId_fkey` FOREIGN KEY (`userId`) REFERENCES `User`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `City` ADD CONSTRAINT `City_province_id_fkey` FOREIGN KEY (`province_id`) REFERENCES `Province`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `_UserCoupons` ADD CONSTRAINT `_UserCoupons_A_fkey` FOREIGN KEY (`A`) REFERENCES `Coupon`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;

@@ -1,48 +1,32 @@
 import fs from 'fs'
 import path from 'path'
-import { PrismaClient } from '@prisma/client'
-import { log } from 'console'
+import { prisma } from '~/prisma'
 
-// Initialize Prisma Client
-const prisma = new PrismaClient()
+async function runTriggersFromFolder(folderPath: string) {
+  const triggersDir = path.join(__dirname, folderPath)
 
-// Function to read and execute SQL from a file
-async function executeSQLFromFile(fileName: string): Promise<void> {
   try {
-    // Construct the file path
-    const filePath = path.join(__dirname, fileName)
+    const files = fs.readdirSync(triggersDir)
 
-    // Read the SQL file
-    const sql = fs.readFileSync(filePath, 'utf8')
+    for (const file of files) {
+      if (file.endsWith('.sql')) {
+        const filePath = path.join(triggersDir, file)
+        const sqlScript = fs.readFileSync(filePath, 'utf-8')
 
-    // Execute the SQL command
-    await prisma.$executeRawUnsafe(sql)
-    console.log(`Successfully executed SQL from ${fileName}`)
+        try {
+          await prisma.$executeRawUnsafe(sqlScript)
+          console.log(`Executed trigger script: ${file}`)
+        } catch (execError) {
+          console.error(`Error executing trigger script ${file}:`, execError)
+        }
+      }
+    }
   } catch (error) {
-    console.error(`Error executing SQL from ${fileName}:`, error)
+    console.error('Error reading trigger files:', error)
+  } finally {
+    await prisma.$disconnect()
   }
 }
 
-// Function to execute multiple SQL files
-async function executeMultipleSQLFiles(fileNames: string[]): Promise<void> {
-  for (const fileName of fileNames) {
-    await executeSQLFromFile(fileName)
-  }
-}
-
-// Example usage
-const triggerFileNames: string[] = [
-  'productPrice.sql',
-  'productQuantity.sql',
-  'categoryProductQuantity.sql',
-  'olderCart.sql'
-]
-console.log('ram')
-
-executeMultipleSQLFiles(triggerFileNames)
-  .catch((error) => {
-    console.error('Failed to execute SQL scripts:', error)
-  })
-  .finally(() => {
-    prisma.$disconnect()
-  })
+// Usage
+runTriggersFromFolder('trigger')

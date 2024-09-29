@@ -1,23 +1,23 @@
 export interface IAddressBase {
-  provinceId: number; // Changed from string to number
-  cityId: number; // Changed from string to number
-  address: string;
-  postalCode: string;
-  unit: string;
+  provinceId: number // Changed from string to number
+  cityId: number // Changed from string to number
+  address: string
+  postalCode: string
+  unit: string
 }
 
 export interface IAddressCreate extends IAddressBase {
-  userId: number;
+  userId: number
 }
 
 export interface IAddressUpdate extends Partial<IAddressBase> {
-  id: number;
+  id: number
 }
 
 export interface IAddressGetOne {
-  id: number;
+  id: number
 }
 
 export interface IAddressGetCityOfProvince {
-  province_id: number;
+  province_id: number
 }

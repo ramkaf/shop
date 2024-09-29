@@ -1,6 +1,15 @@
 import { PrismaClient } from '@prisma/client'
 import { isBefore } from 'date-fns'
-import { IApplyCoupon, ICouponCreate, ICouponFilters, ICouponUpdate, IGetCoupon } from '../interfaces/coupons.interface'
+import {
+  CouponApplyStatus,
+  IApplyCoupon,
+  ICouponApplyResponse,
+  ICouponCreate,
+  ICouponFilters,
+  ICouponUpdate,
+  IGetCoupon
+} from '../interfaces/coupons.interface'
+import { HTTP_STATUS } from '~/globals/constants/http'
 const prisma = new PrismaClient()
 
 class CouponService {
@@ -15,28 +24,73 @@ class CouponService {
     })
     return coupon
   }
+  async getAll(couponFilter: ICouponFilters) {
+    const {
+      code,
+      type,
+      minBuyPrice,
+      firstOrderOnly,
+      expiresBefore,
+      userId,
+      enable,
+      creatorId,
+      beginRange,
+      endRange,
+      sortBy = 'createdAt', // Default sort by createdAt
+      sortOrder = 'asc' // Default sort order is ascending
+    } = couponFilter
+    const whereClause: any = {
+      code,
+      type,
+      minBuyPrice: minBuyPrice ? { gte: minBuyPrice } : undefined,
+      firstOrderOnly,
+      userId,
+      enable,
+      creator: creatorId ? { id: creatorId } : undefined
+    }
+
+    // Add date range conditions if provided
+    if (beginRange && endRange) {
+      const dateRange = { gte: new Date(beginRange), lte: new Date(endRange) }
+      whereClause.createdAt = dateRange
+      whereClause.expiresAt = dateRange
+    } else if (beginRange) {
+      const startDate = new Date(beginRange)
+      whereClause.createdAt = { gte: startDate }
+      whereClause.expiresAt = { gte: startDate }
+    } else if (endRange) {
+      const endDate = new Date(endRange)
+      whereClause.createdAt = { lte: endDate }
+      whereClause.expiresAt = { lte: endDate }
+    }
+
+    // Query the database with validated filters and sorting options
+    const coupons = await prisma.coupon.findMany({
+      where: whereClause,
+      orderBy: {
+        [sortBy]: sortOrder
+      }
+    })
+    return coupons
+  }
   async update(id: number, couponUpdate: ICouponUpdate) {
     return await prisma.coupon.update({
       where: { id },
       data: couponUpdate
-    });
+    })
   }
-  async apply(applyCoupon: IApplyCoupon) {
+  async apply(applyCoupon: IApplyCoupon): Promise<ICouponApplyResponse> {
     const { code, cart, userId } = applyCoupon
     const { totalPrice } = cart
     const coupon = await this.get({ code })
 
     if (!coupon) {
-      throw new Error('Invalid coupon code.')
+      return { discount: 0, status: CouponApplyStatus.INVALID_CODE }
     }
 
-    if (coupon.userId && coupon.userId !== userId) {
-      throw new Error('This coupon is not available for your account.')
-    }
+    if (coupon.userId && coupon.userId !== userId) return { discount: 0, status: CouponApplyStatus.INVALID_CODE }
 
-    if (isBefore(coupon.expiresAt, new Date())) {
-      throw new Error('Coupon has expired.')
-    }
+    if (isBefore(coupon.expiresAt, new Date())) return { discount: 0, status: CouponApplyStatus.EXPIRED }
 
     if (coupon.firstOrderOnly) {
       const existingOrders = await prisma.order.count({
@@ -44,30 +98,34 @@ class CouponService {
       })
 
       if (existingOrders > 0) {
-        return { discount: 0, message: "This coupon is only valid for the user's first order." }
+        return { discount: 0, status: CouponApplyStatus.FIRST_ORDER_ONLY }
       }
     }
 
     if (coupon.usedPermittedForEachUser) {
       if (await this.couponUsed(userId, code, coupon.usedPermittedForEachUser)) {
         if (coupon.usedPermittedAll && coupon.usedPermittedAll <= coupon.usedQuantity)
-          return { discount: 0, message: 'Coupon usage limit exceeded' }
+          return { discount: 0, status: CouponApplyStatus.MAX_DISCOUNT_EXCEEDED }
         if (coupon.type === 'VALUE') {
           if (totalPrice < coupon.minBuyPrice!) {
-            return { discount: 0, message: `Minimum purchase amount is ${coupon.minBuyPrice}.` }
+            return {
+              discount: 0,
+              status: CouponApplyStatus.MINIMUM_REQUIREMENT_NOT_MET,
+              minPrice: coupon.minBuyPrice
+            }
           }
-          return { discount: coupon.discountValue, message: 'coupon successfully applied' }
+          return { discount: coupon.discountValue ?? 0, status: CouponApplyStatus.SUCCESS }
         }
 
         if (coupon.type === 'PERCENTAGE') {
           const discount = (totalPrice * coupon.percentage!) / 100
           const finalDiscount = coupon.maxDiscount && discount > coupon.maxDiscount ? coupon.maxDiscount : discount
-          return { discount: finalDiscount }
+          return { discount: finalDiscount, status: CouponApplyStatus.SUCCESS }
         }
       }
-      return { discount: 0, message: 'Coupon usage limit exceeded' }
+      return { discount: 0, status: CouponApplyStatus.MAX_USAGE_LIMIT }
     }
-    return { discount: 0, message: 'Invalid coupon type.' }
+    return { discount: 0, status: CouponApplyStatus.INVALID_CODE }
   }
   async addUsageCount(couponCode: string) {
     const coupon = await prisma.coupon.update({
@@ -111,55 +169,6 @@ class CouponService {
       }
     })
     return coupon
-  }
-  async getAll(couponFilter : ICouponFilters){
-    const {
-      code,
-      type,
-      minBuyPrice,
-      firstOrderOnly,
-      expiresBefore,
-      userId,
-      enable,
-      creatorId,
-      beginRange,
-      endRange,
-      sortBy = 'createdAt', // Default sort by createdAt
-      sortOrder = 'asc'     // Default sort order is ascending
-    } = couponFilter
-    const whereClause: any = {
-      code,
-      type,
-      minBuyPrice: minBuyPrice ? { gte: minBuyPrice } : undefined,
-      firstOrderOnly,
-      userId,
-      enable,
-      creator: creatorId ? { id: creatorId } : undefined,
-    };
-
-    // Add date range conditions if provided
-    if (beginRange && endRange) {
-      const dateRange = { gte: new Date(beginRange), lte: new Date(endRange) };
-      whereClause.createdAt = dateRange;
-      whereClause.expiresAt = dateRange;
-    } else if (beginRange) {
-      const startDate = new Date(beginRange);
-      whereClause.createdAt = { gte: startDate };
-      whereClause.expiresAt = { gte: startDate };
-    } else if (endRange) {
-      const endDate = new Date(endRange);
-      whereClause.createdAt = { lte: endDate };
-      whereClause.expiresAt = { lte: endDate };
-    }
-
-    // Query the database with validated filters and sorting options
-    const coupons = await prisma.coupon.findMany({
-      where: whereClause,
-      orderBy: {
-        [sortBy]: sortOrder,
-      },
-    });
-    return coupons
   }
 }
 

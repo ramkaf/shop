@@ -31,7 +31,7 @@ export const createCouponSchema = Joi.object({
 
   expiresIn: Joi.string().valid('30m', '1d', '1M', '1y').optional(),
   expiresAt: Joi.date().greater('now').optional()
-}).xor('expiresIn', 'expiresAt') 
+}).xor('expiresIn', 'expiresAt')
 
 export const updateCouponSchema = Joi.object({
   // ID to specify which coupon to update
@@ -49,8 +49,8 @@ export const updateCouponSchema = Joi.object({
   expiresAt: Joi.date().greater('now').optional(),
   firstOrderOnly: Joi.boolean().optional(),
   userId: Joi.number().optional().allow(null),
-  enable: Joi.boolean().optional(),
-}).required();
+  enable: Joi.boolean().optional()
+}).required()
 
 export const getOneCouponSchema = Joi.object({
   code: Joi.string().required()
@@ -68,5 +68,5 @@ export const couponFiltersSchema = Joi.object({
   beginRange: Joi.date().iso().optional(),
   endRange: Joi.date().iso().optional(),
   sortBy: Joi.string().valid('createdAt', 'expiresAt', 'usedQuantity', 'percentage', 'discountValue').optional(),
-  sortOrder: Joi.string().valid('asc', 'desc').optional(),
-});
+  sortOrder: Joi.string().valid('asc', 'desc').optional()
+})

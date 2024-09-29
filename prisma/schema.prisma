@@ -1,8 +1,4 @@
-// This is your Prisma schema file,
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
 generator client {
   provider = "prisma-client-js"
@@ -36,7 +32,6 @@ model User {
   coupons    Coupon[]   @relation("UserCoupons")    // Many-to-many: coupons used by this user
   createdAt  DateTime   @default(now())
   updatedAt  DateTime   @updatedAt
-  cartId     Int?
 }
 
 model Category {
@@ -47,7 +42,7 @@ model Category {
   slug         String    @unique
   uniqueString String    @unique
   mainImage    String
-  quantity Int @default(0)
+  quantity     Int       @default(0)
   products     Product[]
   createdAt    DateTime  @default(now())
   updatedAt    DateTime  @updatedAt
@@ -58,7 +53,7 @@ model Product {
   title            String
   longDescription  String         @db.Text
   shortDescription String
-  price            Float          @default(0)
+  price            Float?
   quantity         Int            @default(0)
   mainImage        String
   productImage     ProductImage[]
@@ -67,7 +62,7 @@ model Product {
   slug             String         @unique
   uniqueString     String         @unique
   categoryId       Int
-  category         Category       @relation(fields: [categoryId], references: [id])
+  category         Category       @relation(fields: [categoryId], references: [id], onDelete: Cascade) // Foreign key constraint
   createdAt        DateTime       @default(now())
   updatedAt        DateTime       @updatedAt
 }
@@ -75,142 +70,142 @@ model Product {
 model Variant {
   id           Int           @id @default(autoincrement())
   name         String
-  product      Product       @relation(fields: [productId], references: [id], onDelete: Cascade)
+  product      Product       @relation(fields: [productId], references: [id], onDelete: Cascade) // Foreign key constraint
   productId    Int
   variantItems VariantItem[]
 }
 
 model VariantItem {
-  id        Int     @id @default(autoincrement())
-  Variant   Variant @relation(fields: [variantId], references: [id], onDelete: Cascade)
+  id        Int      @id @default(autoincrement())
+  Variant   Variant  @relation(fields: [variantId], references: [id], onDelete: Cascade) // Foreign key constraint
   variantId Int
   name      String
   quantity  Int
   price     Float
-  cartItem     CartItem[]
+  cartItem  CartItem[]
   orderItem OrderItem[]
 }
 
 model ProductImage {
   id        Int     @id @default(autoincrement())
   image     String
-  product   Product @relation(fields: [productId], references: [id])
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade) // Foreign key constraint
   productId Int
 }
 
 model Wishlist {
-  id        Int      @id @default(autoincrement()) // Auto-increment ID
+  id        Int      @id @default(autoincrement())
   userId    Int
   productId Int
   createdAt DateTime @default(now())
 
-  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
-  product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  user      User    @relation(fields: [userId], references: [id], onDelete: Cascade) // Foreign key constraint
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade) // Foreign key constraint
 
   @@unique([userId, productId]) // Ensure each user-product combination is unique
 }
 
 model Address {
-  id         Int    @id @default(autoincrement())
+  id         Int      @id @default(autoincrement())
   provinceId Int?
   cityId     Int?
-  province   Province? @relation(fields: [provinceId], references: [id], onDelete: Cascade)
-  city       City?     @relation(fields: [cityId], references: [id], onDelete: Cascade)
+  province   Province? @relation(fields: [provinceId], references: [id], onDelete: Cascade) // Foreign key constraint
+  city       City?     @relation(fields: [cityId], references: [id], onDelete: Cascade)     // Foreign key constraint
   address    String
   postalCode String
   unit       String
-  user       User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)      // Foreign key constraint
   userId     Int
   order      Order[]
 }
 
 model Cart {
-  id         Int        @id @default(autoincrement())
+  id         Int       @id @default(autoincrement())
   totalPrice Float
-  user       User       @relation(fields: [userId], references: [id])
-  userId     Int        @unique
+  user       User      @relation(fields: [userId], references: [id], onDelete: Cascade)      // Foreign key constraint
+  userId     Int       @unique
   cartItems  CartItem[]
-  createdAt  DateTime   @default(now())
-  updatedAt  DateTime   @updatedAt
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
 }
 
 model CartItem {
-  id        Int     @id @default(autoincrement())
-  cart      Cart    @relation(fields: [cartId], references: [id], onDelete: Cascade)
+  id        Int          @id @default(autoincrement())
+  cart      Cart         @relation(fields: [cartId], references: [id], onDelete: Cascade)    // Foreign key constraint
   cartId    Int
-  variant   VariantItem @relation(fields: [variantId], references: [id])
+  variant   VariantItem  @relation(fields: [variantId], references: [id], onDelete: Cascade) // Foreign key constraint
   variantId Int
   price     Float
   quantity  Int
-  createdAt  DateTime   @default(now())
-  updatedAt  DateTime   @updatedAt
+  createdAt DateTime     @default(now())
+  updatedAt DateTime     @updatedAt
   @@unique([cartId, variantId])
 }
+
 enum CouponType {
   VALUE
   PERCENTAGE
 }
+
 model Order {
-  id         Int        @id @default(autoincrement())
-  uniqueString String @unique
-  discount Int @default(0)
-  user      User?       @relation(fields: [userId], references: [id])
-  userId     Int       
-  orderItem  OrderItem[]
-  recipientName String
-  recipientLastName String
-  recipientNumber String
-  deliveringDate String
-  ShippingDate DateTime
-  ShippingCost Float 
-  cartPrice Float
-  servicePrice Float
-  finalPrice Float
-  address      Address    @relation(fields: [addressId], references: [id], onDelete: Cascade)
-  addressId    Int
-  isPaid Boolean @default(false)
-  isDelivered Boolean @default(false)
-  coupon            Coupon?    @relation(fields: [couponId], references: [id])
-  couponId          Int?
-  createdAt  DateTime   @default(now())
-  updatedAt  DateTime   @updatedAt
+  id                 Int       @id @default(autoincrement())
+  uniqueString       String    @unique
+  discount           Int       @default(0)
+  user               User?     @relation(fields: [userId], references: [id], onDelete: Cascade) // Foreign key constraint
+  userId             Int?
+  orderItem          OrderItem[]
+  recipientName      String
+  recipientLastName  String
+  recipientNumber    String
+  deliveringDate     String
+  ShippingDate       DateTime
+  ShippingCost       Float
+  cartPrice          Float
+  servicePrice       Float
+  finalPrice         Float
+  address            Address    @relation(fields: [addressId], references: [id], onDelete: Cascade) // Foreign key constraint
+  addressId          Int
+  isPaid             Boolean    @default(false)
+  isDelivered        Boolean    @default(false)
+  coupon             Coupon?    @relation(fields: [couponId], references: [id], onDelete: Cascade) // Foreign key constraint
+  couponId           Int?
+  createdAt          DateTime   @default(now())
+  updatedAt          DateTime   @updatedAt
 }
 
 model OrderItem {
-  id        Int     @id @default(autoincrement())
-  order      Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
-  orderId    Int
+  id        Int          @id @default(autoincrement())
+  order     Order        @relation(fields: [orderId], references: [id], onDelete: Cascade)     // Foreign key constraint
+  orderId   Int
   price     Float
-  variant   VariantItem @relation(fields: [variantId], references: [id])
+  variant   VariantItem  @relation(fields: [variantId], references: [id], onDelete: Cascade)   // Foreign key constraint
   variantId Int
   quantity  Int
-  createdAt  DateTime   @default(now())
-  updatedAt  DateTime   @updatedAt
+  createdAt DateTime     @default(now())
+  updatedAt DateTime     @updatedAt
 }
 
 model Coupon {
   id                    Int      @id @default(autoincrement())
   code                  String   @unique
   type                  CouponType
-  discountValue         Float?   // For value-based coupons
-  percentage            Float?   // For percentage-based coupons
-  minBuyPrice           Float?   // Minimum price required for value-based coupons
-  maxDiscount           Float?   // Maximum discount for percentage-based coupons
-  firstOrderOnly        Boolean  @default(false) // For first orders only
+  discountValue         Float?
+  percentage            Float?
+  minBuyPrice           Float?
+  maxDiscount           Float?
+  firstOrderOnly        Boolean  @default(false)
   expiresAt             DateTime
   userId                Int?     // Optional: If null, coupon applies to all users
-  creator               User?    @relation("CreatedCoupons", fields: [userId], references: [id]) // One-to-many relationship: creator
+  creator               User?    @relation("CreatedCoupons", fields: [userId], references: [id], onDelete: Cascade) // Foreign key constraint
   enable                Boolean  @default(true)
   usedQuantity          Int      @default(0)
-  usedPermittedForEachUser Int? 
+  usedPermittedForEachUser Int?
   usedPermittedAll      Int?
   orders                Order[]  // A coupon can have many orders
-
   users                 User[]   @relation("UserCoupons") // Many-to-many: users who have used this coupon
   createdAt             DateTime @default(now())
   updatedAt             DateTime @updatedAt
 }
-
 
 model Province {
   id          Int     @id @default(autoincrement())
@@ -226,6 +221,6 @@ model City {
   name        String? @db.VarChar(17)
   slug        String? @db.VarChar(26)
   province_id Int?
-  province    Province? @relation(fields: [province_id], references: [id])
+  province    Province? @relation(fields: [province_id], references: [id], onDelete: Cascade) // Foreign key constraint
   addresses   Address[]
 }

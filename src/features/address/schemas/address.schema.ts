@@ -24,4 +24,3 @@ export const getOneAddressSchema = Joi.object({
 export const getCityOfProvinceSchema = Joi.object({
   province_id: Joi.number().required()
 })
-

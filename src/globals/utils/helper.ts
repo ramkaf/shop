@@ -94,26 +94,26 @@ export function checkUserPermission(model: any, payload: IPayload) {
 }
 export class RandomStringUtil {
   static generateRandomString(length: number, type: 'alpha' | 'numeric' | 'alphanumeric'): string {
-    let chars = '';
+    let chars = ''
     switch (type) {
       case 'alpha':
-        chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
-        break;
+        chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'
+        break
       case 'numeric':
-        chars = '0123456789';
-        break;
+        chars = '0123456789'
+        break
       case 'alphanumeric':
-        chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-        break;
+        chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
+        break
     }
 
-    let result = '';
+    let result = ''
     for (let i = 0; i < length; i++) {
-      result += chars.charAt(Math.floor(Math.random() * chars.length));
+      result += chars.charAt(Math.floor(Math.random() * chars.length))
     }
 
     // Append current timestamp in milliseconds for uniqueness
-    const timestamp = Date.now().toString();
-    return result + timestamp;
+    const timestamp = Date.now().toString()
+    return result + timestamp
   }
 }

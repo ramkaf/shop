@@ -4,24 +4,23 @@ import { prisma } from '~/prisma'
 import couponsService from '../services/coupons.service'
 
 class CouponsController {
-
   public async getAll(req: Request, res: Response, next: NextFunction) {
     try {
-      const couponFilterSchema = {...req.validatedBody}
+      const couponFilterSchema = { ...req.validatedBody }
       const result = await couponsService.getAll(couponFilterSchema)
-      return responseToClient(res,result)
+      return responseToClient(res, result)
     } catch (error) {
-      res.status(500).json({ error: 'An error occurred while fetching coupons.' });
+      res.status(500).json({ error: 'An error occurred while fetching coupons.' })
     }
   }
   public async create(req: Request, res: Response, next: NextFunction) {
     const { code, expiresIn, expiresAt, userId, ...rest } = req.validatedBody
 
     let expirationDate: Date
-    let couponCode = code ?? RandomStringUtil.generateRandomString(8 , 'alphanumeric')
+    let couponCode = code ?? RandomStringUtil.generateRandomString(8, 'alphanumeric')
     let existingCoupon = await couponsService.findOne(couponCode)
     while (existingCoupon) {
-      couponCode = RandomStringUtil.generateRandomString(8 , 'alphanumeric')// Generate a new code if it already exists
+      couponCode = RandomStringUtil.generateRandomString(8, 'alphanumeric') // Generate a new code if it already exists
       existingCoupon = await prisma.coupon.findUnique({
         where: { code: couponCode }
       })
@@ -63,14 +62,14 @@ class CouponsController {
     return responseToClient(res, coupon)
   }
   public async update(req: Request, res: Response, next: NextFunction) {
-    const {id,...rest} = req.validatedBody;
-    const updatedCoupon = await couponsService.update(id, rest);
-    return responseToClient(res, updatedCoupon);
+    const { id, ...rest } = req.validatedBody
+    const updatedCoupon = await couponsService.update(id, rest)
+    return responseToClient(res, updatedCoupon)
   }
   public async delete(req: Request, res: Response, next: NextFunction) {
     const getOneCouponSchema = { ...req.validatedParams }
     const result = await couponsService.remove(getOneCouponSchema)
-    return responseToClient(res,result)
+    return responseToClient(res, result)
   }
 }
 
