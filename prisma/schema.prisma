@@ -21,6 +21,7 @@ model User {
   firstName  String
   lastName   String
   username   String     @unique
+  mobile String @unique
   avatar     String     @default("")
   role       Role       @default(USER)
   isActive   Boolean    @default(true)
@@ -154,18 +155,18 @@ model Order {
   user               User?     @relation(fields: [userId], references: [id], onDelete: Cascade) // Foreign key constraint
   userId             Int?
   orderItem          OrderItem[]
-  recipientName      String
-  recipientLastName  String
-  recipientNumber    String
-  deliveringDate     String
-  ShippingDate       DateTime
-  ShippingCost       Float
+  recipientName      String?
+  recipientLastName  String?
+  recipientNumber    String?
+  shippingDate       DateTime
+  shippingCost       Float
   cartPrice          Float
   servicePrice       Float
   finalPrice         Float
   address            Address    @relation(fields: [addressId], references: [id], onDelete: Cascade) // Foreign key constraint
   addressId          Int
   isPaid             Boolean    @default(false)
+  isProcessed        Boolean    @default(false)
   isDelivered        Boolean    @default(false)
   coupon             Coupon?    @relation(fields: [couponId], references: [id], onDelete: Cascade) // Foreign key constraint
   couponId           Int?

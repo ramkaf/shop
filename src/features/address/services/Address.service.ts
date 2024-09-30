@@ -1,26 +1,35 @@
 import { prisma } from '~/prisma'
 import { BadRequestException, NotFoundException } from '~/globals/middlewares/error.middleware'
 import {
+  IAddress,
   IAddressCreate,
   IAddressGetCityOfProvince,
   IAddressGetOne,
   IAddressUpdate
 } from '../interfaces/address.interface'
 import redisService from '~/globals/services/redisClient'
+import { add } from 'date-fns'
 class AddressesService {
-  public async get(addressGetOne: IAddressGetOne) {
-    const { id } = addressGetOne
-    const result = prisma.address.findFirst({
-      where: {
-        id
-      },
-      include: {
-        province: true,
-        city: true
-      }
-    })
-    return result
-  }
+  public async get(addressGetOne: IAddressGetOne): Promise<IAddress> {
+    const { id } = addressGetOne;
+
+    const address = await prisma.address.findFirst({
+        where: {
+            id,
+        },
+        include: {
+            province: true, // Include province data
+            city: true, // Include city data
+        },
+    });
+
+    if (!address) {
+        throw new BadRequestException('address id is invalid');
+    }
+
+    // Ensure the returned address has all necessary properties
+    return address as IAddress; // Type assertion to IAddress
+}
   public async create(addressCreate: IAddressCreate) {
     const result = prisma.address.create({
       data: addressCreate

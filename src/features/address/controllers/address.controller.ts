@@ -13,6 +13,11 @@ class AddressesController {
     return responseToClient(res, provinces)
   }
   public async create(req: Request, res: Response, next: NextFunction) {
+
+
+
+
+    
     const { id: userId } = req.currentUser
     const addressSchema = { ...req.validatedBody, userId }
     const address = await addressesService.create(addressSchema)

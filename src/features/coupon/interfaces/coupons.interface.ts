@@ -1,4 +1,4 @@
-import { Cart } from '@prisma/client'
+import { Cart, Coupon } from '@prisma/client'
 import { ICart } from '~/features/cart/interfaces/carts.interface'
 import { IOrder } from '~/features/order/interfaces/orders.interface'
 import { IUser } from '~/features/user/interfaces/user.interface'
@@ -64,7 +64,7 @@ export interface IGetCoupon {
 export interface ICouponApplyResponse {
   discount: number
   status: CouponApplyStatus
-  minPrice?: number | null // Optional field for minimum purchase amount
+  coupon : Coupon | null
 }
 
 export enum CouponApplyStatus {

@@ -85,12 +85,12 @@ class CouponService {
     const coupon = await this.get({ code })
 
     if (!coupon) {
-      return { discount: 0, status: CouponApplyStatus.INVALID_CODE }
+      return { discount: 0 , coupon : null,  status: CouponApplyStatus.INVALID_CODE }
     }
 
-    if (coupon.userId && coupon.userId !== userId) return { discount: 0, status: CouponApplyStatus.INVALID_CODE }
+    if (coupon.userId && coupon.userId !== userId) return { discount: 0,coupon , status: CouponApplyStatus.INVALID_CODE }
 
-    if (isBefore(coupon.expiresAt, new Date())) return { discount: 0, status: CouponApplyStatus.EXPIRED }
+    if (isBefore(coupon.expiresAt, new Date())) return { discount: 0,coupon , status: CouponApplyStatus.EXPIRED }
 
     if (coupon.firstOrderOnly) {
       const existingOrders = await prisma.order.count({
@@ -98,34 +98,34 @@ class CouponService {
       })
 
       if (existingOrders > 0) {
-        return { discount: 0, status: CouponApplyStatus.FIRST_ORDER_ONLY }
+        return { discount: 0, coupon , status: CouponApplyStatus.FIRST_ORDER_ONLY }
       }
     }
 
     if (coupon.usedPermittedForEachUser) {
       if (await this.couponUsed(userId, code, coupon.usedPermittedForEachUser)) {
         if (coupon.usedPermittedAll && coupon.usedPermittedAll <= coupon.usedQuantity)
-          return { discount: 0, status: CouponApplyStatus.MAX_DISCOUNT_EXCEEDED }
+          return { discount: 0,coupon , status: CouponApplyStatus.MAX_DISCOUNT_EXCEEDED }
         if (coupon.type === 'VALUE') {
           if (totalPrice < coupon.minBuyPrice!) {
             return {
               discount: 0,
               status: CouponApplyStatus.MINIMUM_REQUIREMENT_NOT_MET,
-              minPrice: coupon.minBuyPrice
+              coupon ,
             }
           }
-          return { discount: coupon.discountValue ?? 0, status: CouponApplyStatus.SUCCESS }
+          return { discount: coupon.discountValue ?? 0,coupon , status: CouponApplyStatus.SUCCESS }
         }
 
         if (coupon.type === 'PERCENTAGE') {
           const discount = (totalPrice * coupon.percentage!) / 100
           const finalDiscount = coupon.maxDiscount && discount > coupon.maxDiscount ? coupon.maxDiscount : discount
-          return { discount: finalDiscount, status: CouponApplyStatus.SUCCESS }
+          return { discount: finalDiscount,coupon , status: CouponApplyStatus.SUCCESS }
         }
       }
-      return { discount: 0, status: CouponApplyStatus.MAX_USAGE_LIMIT }
+      return { discount: 0,coupon , status: CouponApplyStatus.MAX_USAGE_LIMIT }
     }
-    return { discount: 0, status: CouponApplyStatus.INVALID_CODE }
+    return { discount: 0,coupon , status: CouponApplyStatus.INVALID_CODE }
   }
   async addUsageCount(couponCode: string) {
     const coupon = await prisma.coupon.update({
