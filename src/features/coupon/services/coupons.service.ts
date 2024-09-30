@@ -79,7 +79,7 @@ class CouponService {
       data: couponUpdate
     })
   }
-  async apply(applyCoupon: IApplyCoupon): Promise<ICouponApplyResponse> {
+  async apply(applyCoupon: IApplyCoupon){
     const { code, cart, userId } = applyCoupon
     const { totalPrice } = cart
     const coupon = await this.get({ code })

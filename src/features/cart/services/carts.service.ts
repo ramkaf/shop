@@ -107,7 +107,7 @@ class CartsService {
     return result
   }
 
-  public async getUserCart(userId: number): Promise<ICartResponse> {
+  public async getUserCart(userId: number){
     const cart = await prisma.cart.findFirst({
       where: {
         userId

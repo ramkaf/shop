@@ -25,7 +25,7 @@ export interface ICouponUpdate {
 }
 export interface IApplyCoupon {
   code: string
-  cart: ICart
+  cart: Cart
   userId: number
 }
 

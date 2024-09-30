@@ -1,4 +1,4 @@
-import { Address, OrderItem, User } from '@prisma/client'
+import { Address, Cart, OrderItem, User } from '@prisma/client'
 import { IAddress } from '~/features/address/interfaces/address.interface'
 import { ICart } from '~/features/cart/interfaces/carts.interface'
 import { ICoupon } from '~/features/coupon/interfaces/coupons.interface'
@@ -10,7 +10,7 @@ export interface IOrderCreate {
   uniqueString: string;
   discount: number; // finalDiscount
   userId: number;
-  cart: ICart;
+  cart: Cart;
   recipientName : string,
   recipientLastName: string;
   recipientNumber: string;
