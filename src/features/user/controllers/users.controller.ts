@@ -6,21 +6,7 @@ import { usersService } from '../services/users.service'
 import { addressesService } from '~/features/address/services/Address.service'
 import { cartsService } from '~/features/cart/services/carts.service'
 class UsersController {
-  public async createUser(req: Request, res: Response, next: NextFunction) {
-    const { firstName, lastName, email, password, avatar, username } = req.body
-    const newUser = await prisma.user.create({
-      data: {
-        firstName,
-        lastName,
-        password,
-        avatar,
-        email,
-        username
-      }
-    })
-    res.status(201).json({ newUser })
-    console.log('Inserted user:', newUser)
-  }
+
   public async getMe(req: Request, res: Response, next: NextFunction) {
     return req.currentUser
   }

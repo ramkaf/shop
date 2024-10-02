@@ -1,8 +1,11 @@
-﻿export interface IAuthRegister {
+﻿import { Address, Cart, Coupon, Order, Wishlist } from "@prisma/client"
+
+export interface IAuthRegister {
   email: string
   firstName: string
   lastName: string
   username: string
+  mobile : string
   password: string
 }
 export interface IAuthLogin {
@@ -19,12 +22,12 @@ export interface IUser {
   avatar: string;
   role: Role;
   isActive: boolean;
-  wishList: IWishlist[];
-  address: IAddress[];
-  order: IOrder[];
-  coupon: ICoupon[]; // Created Coupons
-  cart?: ICart; // Optional
-  coupons: ICoupon[]; // User Coupons
+  wishList: Wishlist[];
+  address: Address[];
+  order: Order[];
+  coupon: Coupon[]; // Created Coupons
+  cart?: Cart; // Optional
+  coupons: Coupon[]; // User Coupons
   createdAt: Date;
   updatedAt: Date;
 }
@@ -43,6 +46,7 @@ export interface IUserUpdate {
 export interface IGetUser {
   email?: string
   username?: string
+  mobile? : string
   id?: number
 }
 
